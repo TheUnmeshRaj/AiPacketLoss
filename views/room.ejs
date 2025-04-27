@@ -1,31 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
   <script>
-    const ROOM_ID = "<%= roomId %>"
+    const ROOM_ID = "<%= roomId %>";
   </script>
-  <script defer src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+
+  <script defer src="https://unpkg.com/peerjs@latest/dist/peerjs.min.js"></script>
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="script.js" defer></script>
-  <title>Document</title>
+
+  <title>Video Chat</title>
+
   <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
     #video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, 300px);
-      grid-auto-rows: 300px;
+      grid-template-columns: repeat(2, 1fr); /* Only two columns for two people */
+      gap: 20px;
+      padding: 40px;
+      max-width: 1200px;
+      width: 100%;
+      height: 80%;
+      justify-content: center;
+      border-radius: 15px;
+      background-color: #fff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
     
     video {
       width: 100%;
       height: 100%;
+      aspect-ratio: 1; /* Ensure the videos are square */
+      border-radius: 12px;
       object-fit: cover;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      border: 4px solid #fff;
+    }
+    
+
+    video:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      padding-top: 20px;
+    }
+
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+      #video-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      #controls {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
+
 <body>
+  <h1>Video Chat</h1>
   <div id="video-grid"></div>
+  <div id="controls">
+    <button id="toggle-audio">Mute</button>
+    <button id="toggle-video">Turn Off Camera</button>
+  </div>
+
+  <script>
+    document.getElementById('toggle-audio').addEventListener('click', () => {
+      const button = document.getElementById('toggle-audio');
+      button.textContent = toggleAudio();
+    });
+
+    document.getElementById('toggle-video').addEventListener('click', () => {
+      const button = document.getElementById('toggle-video');
+      button.textContent = toggleVideo();
+    });
+  </script>
 </body>
+
 </html>
