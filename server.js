@@ -16,18 +16,21 @@ app.get('/:room', (req, res) => {
 })
 
 io.on('connection', socket => {
+  console.log('User connected:', socket.id)
+  
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
+    console.log(`User ${userId} joined room ${roomId}`)
     socket.to(roomId).broadcast.emit('user-connected', userId)
 
     socket.on('disconnect', () => {
+      console.log(`User ${userId} disconnected from room ${roomId}`)
       socket.to(roomId).broadcast.emit('user-disconnected', userId)
     })
   })
 })
 
-// Use environment PORT or fallback to 3000
 const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  console.log(`🚀 Server running on port ${PORT}`)
 })
