@@ -1,32 +1,22 @@
 {
   "name": "zoom-clone",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "start-peer-server": "peerjs --port 3001"
+    "build": "echo 'Build complete'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "peer": "^1.0.2",
-    "socket.io": "^2.5.1",
+    "socket.io": "^4.7.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC.git"
-  },
-  "bugs": {
-    "url": "https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC/issues"
-  },
-  "homepage": "https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC#readme",
-  "description": ""
+  }
 }
