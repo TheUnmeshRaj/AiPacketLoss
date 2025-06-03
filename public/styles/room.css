@@ -20,7 +20,6 @@ body {
 }
 
 h1 {
-ma
   font-size: 2rem;
   font-weight: 700;
   color: #e0e0e0;
@@ -56,16 +55,18 @@ video:hover {
 
 #controls {
   position: fixed;
-  bottom: 1px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 8px 16px;
-  border-radius: 30px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 12px 24px;
   display: flex;
-  gap: 15px;
+  justify-content: center;
+  gap: 20px;
   z-index: 999;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 
 #controls:hover {
   background: rgba(21, 46, 27, 0.8);

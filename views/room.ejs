@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/styles/room.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-
   <script>
     const ROOM_ID = "<%= roomId %>";
   </script>
@@ -33,10 +32,10 @@
       const icon = document.querySelector('#toggle-audio i');
       if (icon.classList.contains('fa-microphone')) {
         icon.classList.replace('fa-microphone', 'fa-microphone-slash');
-        toggleAudio(); // your mute function
+        toggleAudio(); 
       } else {
         icon.classList.replace('fa-microphone-slash', 'fa-microphone');
-        toggleAudio(); // your unmute function
+        toggleAudio(); 
       }
     });
     
@@ -44,14 +43,19 @@
       const icon = document.querySelector('#toggle-video i');
       if (icon.classList.contains('fa-video')) {
         icon.classList.replace('fa-video', 'fa-video-slash');
-        toggleVideo(); // your video off function
+        toggleVideo(); 
       } else {
         icon.classList.replace('fa-video-slash', 'fa-video');
-        toggleVideo(); // your video on function
+        toggleVideo(); 
       }
     });
     document.getElementById('end-call').addEventListener('click', () => {
       window.location.href = '/'; 
+    });
+    document.getElementById('settings-btn').addEventListener('click', () => {
+      fetch('/run-something')
+        .then(res => res.text())
+        .then(console.log);
     });
     
   </script>

@@ -1,10 +1,10 @@
 const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
-const myPeer = new Peer(); // Use PeerJS cloud server
+const myPeer = new Peer(); 
 const myVideo = document.createElement('video');
 myVideo.muted = true;
 const peers = {};
-let myStream; // Store the local stream for toggle controls
+let myStream; 
 
 navigator.mediaDevices.getUserMedia({
   video: true,
