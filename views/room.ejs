@@ -52,8 +52,14 @@
       }
     });
     document.getElementById('end-call').addEventListener('click', () => {
-      window.location.href = '/'; 
-    });
+  socket.emit('left-call', myPeer.id);
+  if (myPeer) myPeer.destroy();
+  if (myStream) myStream.getTracks().forEach(track => track.stop());
+  socket.disconnect();
+  window.location.href = '/left'; // go to the goodbye page
+});
+
+
     document.getElementById('settings-btn').addEventListener('click', () => {
       fetch('/run-something')
         .then(res => res.text())

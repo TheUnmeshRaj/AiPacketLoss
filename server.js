@@ -11,6 +11,11 @@ app.get('/', (req, res) => {
   res.redirect(`/${uuidV4()}`)
 })
 
+app.get('/left', (req, res) => {
+  res.render('left');
+});
+
+
 app.get('/:room', (req, res) => {
   res.render('room', { roomId: req.params.room })
 })
@@ -28,6 +33,15 @@ io.on('connection', socket => {
       socket.emit('existing-users', existingUsers)
     }
   })
+
+ 
+  socket.on('left-call', (userId) => {
+  console.log(`User ${userId} left manually`);
+  socket.rooms.forEach(roomId => {
+    socket.to(roomId).emit('user-left', userId);
+  });
+});
+
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id)
     socket.rooms.forEach(roomId => {

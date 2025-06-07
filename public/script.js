@@ -37,6 +37,12 @@ socket.on('user-disconnected', userId => {
   if (peers[userId]) peers[userId].close();
 });
 
+socket.on('user-left', userId => {
+  showToast(`User ${userId} has left the chat.`);
+  if (peers[userId]) peers[userId].close();
+});
+
+
 socket.on('room-full', () => {
   alert('Room is full! Please try another room.');
 });
@@ -80,4 +86,12 @@ function toggleVideo() {
     videoTrack.enabled = !videoTrack.enabled;
     return videoTrack.enabled ? 'Turn Off Camera' : 'Turn On Camera';
   }
+}
+
+function showToast(message) {
+  const div = document.createElement('div');
+  div.innerText = message;
+  div.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 rounded shadow z-50';
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
 }
