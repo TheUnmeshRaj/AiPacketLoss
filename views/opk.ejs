@@ -47,6 +47,35 @@
   <!-- Main content -->
   <div class="main-container">
     <div id="video-grid">
+      <!-- Demo video containers -->
+      <div class="video-container">
+        <video autoplay muted></video>
+        <div class="video-overlay">
+          <span class="participant-name">You</span>
+          <div class="audio-indicator">
+            <div class="audio-wave"></div>
+            <div class="audio-wave"></div>
+            <div class="audio-wave"></div>
+          </div>
+        </div>
+        <div class="status-indicator">
+          <i class="fas fa-microphone-slash"></i>
+        </div>
+      </div>
+      
+      <div class="video-container">
+        <video autoplay></video>
+        <div class="video-overlay">
+          <span class="participant-name">Participant 2</span>
+          <div class="audio-indicator">
+            <i class="fas fa-volume-up"></i>
+          </div>
+        </div>
+        <div class="status-indicator recording">
+          <div class="recording-dot"></div>
+          REC
+        </div>
+      </div>
     </div>
   </div>
 

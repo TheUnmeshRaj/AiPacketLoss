@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <title>Conference Room - Professional Video Calling</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      color: #ffffff;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 118, 117, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 80%, rgba(0, 198, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 15, 35, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 24px;
+      color: #00c6ff;
+    }
+
+    .logo span {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .room-info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 24px;
+    }
+
+    .room-id {
+      font-size: 14px;
+      color: #a0a0a0;
+      font-weight: 500;
+    }
+
+    .participants-count {
+      font-size: 12px;
+      color: #00c6ff;
+      font-weight: 600;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .time-display {
+      font-size: 14px;
+      color: #a0a0a0;
+      font-weight: 500;
+      min-width: 80px;
+    }
+
+    .settings-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .settings-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Main content area */
+    .main-container {
+      position: relative;
+      height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 100px;
+      z-index: 1;
+    }
+
+    #video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      height: 100%;
+      align-items: center;
+      justify-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #1a1a2e;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      border-color: rgba(0, 198, 255, 0.3);
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .video-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .participant-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .audio-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .audio-wave {
+      width: 3px;
+      height: 12px;
+      background: #00c6ff;
+      border-radius: 2px;
+      animation: audioWave 1.5s ease-in-out infinite;
+    }
+
+    .audio-wave:nth-child(2) { animation-delay: 0.2s; }
+    .audio-wave:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes audioWave {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+
+    /* Controls */
+    #controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 15, 35, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+    }
+
+    .control-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .control-btn.active {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border-color: #00c6ff;
+      box-shadow: 0 4px 16px rgba(0, 198, 255, 0.4);
+    }
+
+    .control-btn.muted {
+      background: rgba(255, 77, 77, 0.2);
+      border-color: rgba(255, 77, 77, 0.4);
+      color: #ff4d4d;
+    }
+
+    #end-call {
+      background: linear-gradient(135deg, #ff4d4d, #d32f2f);
+      border-color: #ff4d4d;
+      box-shadow: 0 4px 16px rgba(255, 77, 77, 0.4);
+    }
+
+    #end-call:hover {
+      background: linear-gradient(135deg, #d32f2f, #b71c1c);
+      box-shadow: 0 8px 24px rgba(255, 77, 77, 0.6);
+    }
+
+    .more-options {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 16px;
+    }
+
+    .more-options:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Status indicators */
+    .status-indicator {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-indicator.recording {
+      background: rgba(255, 77, 77, 0.9);
+    }
+
+    .recording-dot {
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 12px 16px;
+      }
+      
+      .logo span {
+        font-size: 18px;
+      }
+      
+      .room-info {
+        margin-left: 16px;
+      }
+      
+      #video-grid {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+      
+      #controls {
+        padding: 16px;
+        gap: 12px;
+      }
+      
+      .control-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+      }
+      
+      .more-options {
+        display: none;
+      }
+    }
+
+    /* Loading state */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 15, 35, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(10px);
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #00c6ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Notification toast */
+    .toast {
+      position: fixed;
+      top: 100px;
+      right: 24px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      border-left: 4px solid #00c6ff;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 2000;
+      max-width: 300px;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast-icon {
+      font-size: 20px;
+      color: #00c6ff;
+    }
+
+    .toast-message {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+
+  <script>
+    const ROOM_ID = "demo-room-123"; // Replace with <%= roomId %>
+  </script>
+
+  <script defer src="https://unpkg.com/peerjs@latest/dist/peerjs.min.js"></script>
+  <!-- <script defer src="/socket.io/socket.io.js"></script> -->
+  <!-- <script defer src="/script.js"></script> -->
+</head>
+
+<body>
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <a href="#" class="logo">
+        <i class="fas fa-video"></i>
+        <span>ConferenceRoom</span>
+      </a>
+      <div class="room-info">
+        <div class="room-id">Room ID: <span id="room-id-display">demo-room-123</span></div>
+        <div class="participants-count">2 participants</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="time-display" id="time-display">00:00</div>
+      <button class="settings-btn" id="settings-btn">
+        <i class="fas fa-cog"></i>
+        Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <div class="main-container">
+    <div id="video-grid">
+      <!-- Demo video containers -->
+      <div class="video-container">
+        <video autoplay muted></video>
+        <div class="video-overlay">
+          <span class="participant-name">You</span>
+          <div class="audio-indicator">
+            <div class="audio-wave"></div>
+            <div class="audio-wave"></div>
+            <div class="audio-wave"></div>
+          </div>
+        </div>
+        <div class="status-indicator">
+          <i class="fas fa-microphone-slash"></i>
+        </div>
+      </div>
+      
+      <div class="video-container">
+        <video autoplay></video>
+        <div class="video-overlay">
+          <span class="participant-name">Participant 2</span>
+          <div class="audio-indicator">
+            <i class="fas fa-volume-up"></i>
+          </div>
+        </div>
+        <div class="status-indicator recording">
+          <div class="recording-dot"></div>
+          REC
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <div class="control-group">
+      <button class="control-btn muted" id="toggle-audio" title="Toggle Microphone">
+        <i class="fas fa-microphone-slash"></i>
+      </button>
+      <button class="control-btn muted" id="toggle-video" title="Toggle Camera">
+        <i class="fas fa-video-slash"></i>
+      </button>
+      <button class="control-btn" id="screen-share" title="Share Screen">
+        <i class="fas fa-desktop"></i>
+      </button>
+    </div>
+    
+    <button class="control-btn" id="end-call" title="End Call">
+      <i class="fas fa-phone-slash"></i>
+    </button>
+    
+    <div class="control-group">
+      <button class="control-btn" id="chat-toggle" title="Toggle Chat">
+        <i class="fas fa-comment"></i>
+      </button>
+      <button class="control-btn" id="participants-list" title="Participants">
+        <i class="fas fa-users"></i>
+      </button>
+      <button class="more-options" id="more-options">
+        <i class="fas fa-ellipsis-h"></i>
+        More
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast" id="toast">
+    <div class="toast-content">
+      <i class="fas fa-info-circle toast-icon"></i>
+      <div class="toast-message">Notification message</div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize the interface
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide loading overlay after a delay
+      setTimeout(() => {
+        document.getElementById('loading-overlay').style.display = 'none';
+      }, 1500);
+
+      // Update time display
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', { 
+          hour12: false, 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        document.getElementById('time-display').textContent = timeString;
+      }
+      
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      // Update room ID display
+      document.getElementById('room-id-display').textContent = ROOM_ID;
+    });
+
+    // Show toast notification
+    function showToast(message, icon = 'fa-info-circle') {
+      const toast = document.getElementById('toast');
+      const toastIcon = toast.querySelector('.toast-icon');
+      const toastMessage = toast.querySelector('.toast-message');
+      
+      toastIcon.className = `fas ${icon} toast-icon`;
+      toastMessage.textContent = message;
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Audio toggle functionality
+    document.getElementById('toggle-audio').addEventListener('click', function() {
+      const button = this;
+      const icon = button.querySelector('i');
+      const isMuted = button.classList.contains('muted');
+      
+      if (isMuted) {
+        button.classList.remove('muted');
+        icon.className = 'fas fa-microphone';
+        showToast('Microphone unmuted', 'fa-microphone');
+      } else {
+        button.classList.add('muted');
+        icon.className = 'fas fa-microphone-slash';
+        showToast('Microphone muted', 'fa-microphone-slash');
+      }
+      
+      // Call your toggleAudio function here
+       toggleAudio();
+    });
+
+    // Video toggle functionality
+    document.getElementById('toggle-video').addEventListener('click', function() {
+      const button = this;
+      const icon = button.querySelector('i');
+      const isMuted = button.classList.contains('muted');
+      
+      if (isMuted) {
+        button.classList.remove('muted');
+        icon.className = 'fas fa-video';
+        showToast('Camera enabled', 'fa-video');
+      } else {
+        button.classList.add('muted');
+        icon.className = 'fas fa-video-slash';
+        showToast('Camera disabled', 'fa-video-slash');
+      }
+      
+      // Call your toggleVideo function here
+      // toggleVideo();
+    });
+
+    // Screen share toggle
+    document.getElementById('screen-share').addEventListener('click', function() {
+      const button = this;
+      const icon = button.querySelector('i');
+      
+      if (button.classList.contains('active')) {
+        button.classList.remove('active');
+        icon.className = 'fas fa-desktop';
+        showToast('Screen sharing stopped', 'fa-desktop');
+      } else {
+        button.classList.add('active');
+        icon.className = 'fas fa-stop';
+        showToast('Screen sharing started', 'fa-desktop');
+      }
+    });
+
+    // End call functionality
+    document.getElementById('end-call').addEventListener('click', function() {
+      showToast('Ending call...', 'fa-phone-slash');
+      
+      // Your existing end call logic here
+      socket.emit('left-call', myPeer.id);
+      if (myPeer) myPeer.destroy();
+      if (myStream) myStream.getTracks().forEach(track => track.stop());
+      socket.disconnect();
+      window.location.href = '/left';
+      
+      // For demo purposes, just show a message
+      setTimeout(() => {
+        alert('Call ended. In a real implementation, this would redirect to the goodbye page.');
+      }, 1000);
+    });
+
+    // Chat toggle
+    document.getElementById('chat-toggle').addEventListener('click', function() {
+      const button = this;
+      
+      if (button.classList.contains('active')) {
+        button.classList.remove('active');
+        showToast('Chat closed', 'fa-comment');
+      } else {
+        button.classList.add('active');
+        showToast('Chat opened', 'fa-comment');
+      }
+    });
+
+    // Participants list
+    document.getElementById('participants-list').addEventListener('click', function() {
+      showToast('Participants list opened', 'fa-users');
+    });
+
+    // Settings button
+    document.getElementById('settings-btn').addEventListener('click', function() {
+      showToast('Settings opened', 'fa-cog');
+      
+      // Your existing settings logic here
+      fetch('/run-something')
+        .then(res => res.text())
+        .then(console.log);
+    });
+
+    // More options
+    document.getElementById('more-options').addEventListener('click', function() {
+      showToast('More options menu opened', 'fa-ellipsis-h');
+    });
+
+    // Demo: Start user's camera
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        const videoElements = document.querySelectorAll('video');
+        if (videoElements[0]) {
+          videoElements[0].srcObject = stream;
+        }
+      })
+      .catch(err => {
+        console.log('Camera access denied or not available');
+        showToast('Camera access denied', 'fa-exclamation-triangle');
+      });
+  </script>
+</body>
+</html>
