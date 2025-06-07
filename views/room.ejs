@@ -19,11 +19,7 @@
 </head>
 
 <body>
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="loading-spinner"></div>
-  </div>
 
-  <!-- Header -->
   <header class="header">
     <div class="header-left">
       <a href="#" class="logo">
@@ -31,8 +27,8 @@
         <span>ConferenceRoom</span>
       </a>
       <div class="room-info">
-        <div class="room-id">Room ID: <span id="room-id-display">demo-room-123</span></div>
-        <div class="participants-count">2 participants</div>
+        <div class="room-id">Room ID: <span id="room-id-display">Room</span></div>
+        <div class="participants-count">Participants: <span id="participants-count">1</span></div>
       </div>
     </div>
     <div class="header-right">
@@ -44,20 +40,18 @@
     </div>
   </header>
 
-  <!-- Main content -->
   <div class="main-container">
     <div id="video-grid">
     </div>
   </div>
 
-  <!-- Controls -->
   <div id="controls">
     <div class="control-group">
       <button class="control-btn muted" id="toggle-audio" title="Toggle Microphone">
-        <i class="fas fa-microphone-slash"></i>
+        <i class="fas fa-microphone"></i>
       </button>
       <button class="control-btn muted" id="toggle-video" title="Toggle Camera">
-        <i class="fas fa-video-slash"></i>
+        <i class="fas fa-video"></i>
       </button>
       <button class="control-btn" id="screen-share" title="Share Screen">
         <i class="fas fa-desktop"></i>
@@ -82,7 +76,6 @@
     </div>
   </div>
 
-  <!-- Toast notifications -->
   <div class="toast" id="toast">
     <div class="toast-content">
       <i class="fas fa-info-circle toast-icon"></i>
@@ -91,14 +84,11 @@
   </div>
 
   <script>
-    // Initialize the interface
     document.addEventListener('DOMContentLoaded', function() {
-      // Hide loading overlay after a delay
       setTimeout(() => {
         document.getElementById('loading-overlay').style.display = 'none';
       }, 1500);
 
-      // Update time display
       function updateTime() {
         const now = new Date();
         const timeString = now.toLocaleTimeString('en-US', { 
@@ -112,11 +102,9 @@
       updateTime();
       setInterval(updateTime, 1000);
 
-      // Update room ID display
       document.getElementById('room-id-display').textContent = ROOM_ID;
     });
 
-    // Show toast notification
     function showToast(message, icon = 'fa-info-circle') {
       const toast = document.getElementById('toast');
       const toastIcon = toast.querySelector('.toast-icon');
@@ -132,7 +120,6 @@
       }, 3000);
     }
 
-    // Audio toggle functionality
     document.getElementById('toggle-audio').addEventListener('click', function() {
       const button = this;
       const icon = button.querySelector('i');
@@ -140,19 +127,17 @@
       
       if (isMuted) {
         button.classList.remove('muted');
-        icon.className = 'fas fa-microphone';
-        showToast('Microphone unmuted', 'fa-microphone');
+        icon.className = 'fas fa-microphone-slash';
+        showToast('Microphone unmuted', 'fa-microphone-slash');
       } else {
         button.classList.add('muted');
-        icon.className = 'fas fa-microphone-slash';
-        showToast('Microphone muted', 'fa-microphone-slash');
+        icon.className = 'fas fa-microphone';
+        showToast('Microphone muted', 'fa-microphone');
       }
       
-      // Call your toggleAudio function here
       toggleAudio();
     });
 
-    // Video toggle functionality
     document.getElementById('toggle-video').addEventListener('click', function() {
       const button = this;
       const icon = button.querySelector('i');
@@ -160,19 +145,17 @@
       
       if (isMuted) {
         button.classList.remove('muted');
-        icon.className = 'fas fa-video';
-        showToast('Camera enabled', 'fa-video');
+        icon.className = 'fas fa-video-slash';
+        showToast('Camera enabled', 'fa-video-slash');
       } else {
         button.classList.add('muted');
-        icon.className = 'fas fa-video-slash';
-        showToast('Camera disabled', 'fa-video-slash');
+        icon.className = 'fas fa-video';
+        showToast('Camera disabled', 'fa-video');
       }
       
-      // Call your toggleVideo function here
       toggleVideo();
     });
 
-    // Screen share toggle
     document.getElementById('screen-share').addEventListener('click', function() {
       const button = this;
       const icon = button.querySelector('i');
@@ -188,24 +171,20 @@
       }
     });
 
-    // End call functionality
     document.getElementById('end-call').addEventListener('click', function() {
       showToast('Ending call...', 'fa-phone-slash');
       
-      // Your existing end call logic here
       socket.emit('left-call', myPeer.id);
       if (myPeer) myPeer.destroy();
       if (myStream) myStream.getTracks().forEach(track => track.stop());
       socket.disconnect();
       window.location.href = '/left';
       
-      // For demo purposes, just show a message
       setTimeout(() => {
         alert('Call ended. In a real implementation, this would redirect to the goodbye page.');
       }, 1000);
     });
 
-    // Chat toggle
     document.getElementById('chat-toggle').addEventListener('click', function() {
       const button = this;
       
@@ -218,27 +197,22 @@
       }
     });
 
-    // Participants list
     document.getElementById('participants-list').addEventListener('click', function() {
       showToast('Participants list opened', 'fa-users');
     });
 
-    // Settings button
     document.getElementById('settings-btn').addEventListener('click', function() {
       showToast('Settings opened', 'fa-cog');
       
-      // Your existing settings logic here
       fetch('/run-something')
         .then(res => res.text())
         .then(console.log);
     });
 
-    // More options
     document.getElementById('more-options').addEventListener('click', function() {
       showToast('More options menu opened', 'fa-ellipsis-h');
     });
 
-    // Demo: Start user's camera
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {
         const videoElements = document.querySelectorAll('video');

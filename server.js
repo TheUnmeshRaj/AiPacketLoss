@@ -3,6 +3,7 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const { v4: uuidV4 } = require('uuid')
+const roomParticipants = {};
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -24,30 +25,34 @@ io.on('connection', socket => {
   console.log('User connected:', socket.id)
   
   socket.on('join-room', (roomId, userId) => {
-    socket.join(roomId)
-    console.log(`User ${userId} joined room ${roomId}`)
-    socket.to(roomId).emit('user-connected', userId)
-    const room = io.sockets.adapter.rooms.get(roomId)
-    if (room) {
-      const existingUsers = Array.from(room).filter(id => id !== socket.id)
-      socket.emit('existing-users', existingUsers)
-    }
-  })
+  socket.join(roomId);
+  console.log(`User ${userId} joined room ${roomId}`);
 
+  if (!roomParticipants[roomId]) roomParticipants[roomId] = new Set();
+  roomParticipants[roomId].add(userId);
+
+  socket.to(roomId).emit('user-connected', userId);
+  const room = io.sockets.adapter.rooms.get(roomId);
+  if (room) {
+    const existingUsers = Array.from(room).filter(id => id !== socket.id);
+    socket.emit('existing-users', existingUsers);
+  }
+});
  
   socket.on('left-call', (userId) => {
-  console.log(`User ${userId} left manually`);
   socket.rooms.forEach(roomId => {
+    roomParticipants[roomId]?.delete(userId);
     socket.to(roomId).emit('user-left', userId);
   });
 });
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id)
-    socket.rooms.forEach(roomId => {
-      socket.to(roomId).emit('user-disconnected', socket.id)
-    })
-  })
+socket.on('disconnect', () => {
+  socket.rooms.forEach(roomId => {
+    roomParticipants[roomId]?.delete(socket.id);
+    socket.to(roomId).emit('user-disconnected', socket.id);
+  });
+});
+
 })
 
 const PORT = process.env.PORT || 3000

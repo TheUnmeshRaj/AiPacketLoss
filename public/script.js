@@ -22,11 +22,15 @@ navigator.mediaDevices.getUserMedia({
   });
 
   socket.on('user-connected', userId => {
-    connectToNewUser(userId, stream);
-  });
+  connectToNewUser(userId, myStream);
+  updateParticipantCount();
+});
+
 
   socket.on('existing-users', userIds => {
     userIds.forEach(userId => connectToNewUser(userId, stream));
+  updateParticipantCount();
+
   });
 }).catch(err => {
   console.error('Failed to access media devices:', err);
@@ -35,7 +39,16 @@ navigator.mediaDevices.getUserMedia({
 
 socket.on('user-disconnected', userId => {
   if (peers[userId]) peers[userId].close();
+  delete peers[userId];
+  updateParticipantCount();
 });
+
+
+function updateParticipantCount() {
+  const count = Object.keys(peers).length + 1; // +1 for yourself
+  const el = document.getElementById('participants-count');
+  if (el) el.textContent = count;
+}
 
 socket.on('user-left', userId => {
   showToast(`User ${userId} has left the chat.`);
