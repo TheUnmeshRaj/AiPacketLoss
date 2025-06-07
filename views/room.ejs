@@ -40,10 +40,11 @@
     </div>
   </header>
 
-  <div class="main-container">
-    <div id="video-grid">
-    </div>
+<div class="main-container">
+  <div id="video-grid">
+
   </div>
+</div>
 
   <div id="controls">
     <div class="control-group">
@@ -76,12 +77,6 @@
     </div>
   </div>
 
-  <div class="toast" id="toast">
-    <div class="toast-content">
-      <i class="fas fa-info-circle toast-icon"></i>
-      <div class="toast-message">Notification message</div>
-    </div>
-  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -105,20 +100,6 @@
       document.getElementById('room-id-display').textContent = ROOM_ID;
     });
 
-    function showToast(message, icon = 'fa-info-circle') {
-      const toast = document.getElementById('toast');
-      const toastIcon = toast.querySelector('.toast-icon');
-      const toastMessage = toast.querySelector('.toast-message');
-      
-      toastIcon.className = `fas ${icon} toast-icon`;
-      toastMessage.textContent = message;
-      
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
 
     document.getElementById('toggle-audio').addEventListener('click', function() {
       const button = this;
@@ -128,11 +109,9 @@
       if (isMuted) {
         button.classList.remove('muted');
         icon.className = 'fas fa-microphone-slash';
-        showToast('Microphone unmuted', 'fa-microphone-slash');
       } else {
         button.classList.add('muted');
         icon.className = 'fas fa-microphone';
-        showToast('Microphone muted', 'fa-microphone');
       }
       
       toggleAudio();
@@ -146,11 +125,9 @@
       if (isMuted) {
         button.classList.remove('muted');
         icon.className = 'fas fa-video-slash';
-        showToast('Camera enabled', 'fa-video-slash');
       } else {
         button.classList.add('muted');
         icon.className = 'fas fa-video';
-        showToast('Camera disabled', 'fa-video');
       }
       
       toggleVideo();
@@ -163,16 +140,13 @@
       if (button.classList.contains('active')) {
         button.classList.remove('active');
         icon.className = 'fas fa-desktop';
-        showToast('Screen sharing stopped', 'fa-desktop');
       } else {
         button.classList.add('active');
         icon.className = 'fas fa-stop';
-        showToast('Screen sharing started', 'fa-desktop');
       }
     });
 
     document.getElementById('end-call').addEventListener('click', function() {
-      showToast('Ending call...', 'fa-phone-slash');
       
       socket.emit('left-call', myPeer.id);
       if (myPeer) myPeer.destroy();
@@ -190,19 +164,15 @@
       
       if (button.classList.contains('active')) {
         button.classList.remove('active');
-        showToast('Chat closed', 'fa-comment');
       } else {
         button.classList.add('active');
-        showToast('Chat opened', 'fa-comment');
       }
     });
 
     document.getElementById('participants-list').addEventListener('click', function() {
-      showToast('Participants list opened', 'fa-users');
     });
 
     document.getElementById('settings-btn').addEventListener('click', function() {
-      showToast('Settings opened', 'fa-cog');
       
       fetch('/run-something')
         .then(res => res.text())
@@ -210,7 +180,6 @@
     });
 
     document.getElementById('more-options').addEventListener('click', function() {
-      showToast('More options menu opened', 'fa-ellipsis-h');
     });
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -222,7 +191,6 @@
       })
       .catch(err => {
         console.log('Camera access denied or not available');
-        showToast('Camera access denied', 'fa-exclamation-triangle');
       });
   </script>
 </body>

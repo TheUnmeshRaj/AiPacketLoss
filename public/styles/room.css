@@ -4,7 +4,6 @@ body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #1d1f21, #3d3f42);
   background-image: url('okok.gif');
-  /* background-position: -10px; */
   background-size: cover;
   background-repeat: no-repeat;
   margin: 0;
@@ -33,13 +32,43 @@ h1 {
   width: 100%;
   height: 70%;
   gap: 20px; 
+}
+
+.video-container {
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.video-container:hover {
+  transform: scale(1.03);
+}
+
+.video-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  backdrop-filter: blur(5px);
   pointer-events: none;
 }
 
+.participant-name {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+}
 
 video {
-  width: clamp(350px,100vh,500px);
-  height: clamp(350px,100vh,500px);
+ width: 1600px;
+  height: 1400px;
+
   border-radius: 25px;
   object-fit: cover;
   background: #000;
@@ -67,7 +96,6 @@ video:hover {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-
 #controls:hover {
   background: rgba(21, 46, 27, 0.8);
   transition: background 0.3s;
@@ -87,7 +115,7 @@ button {
   align-items: center;
   justify-content: center;
   user-select: none;
-  box-shadow: 0 4px 12px rgba(0,114,255,0.5);
+  box-shadow: 0 4px 12px rgba(0, 114, 255, 0.5);
 }
 
 button i {
@@ -97,7 +125,7 @@ button i {
 button:hover {
   background: linear-gradient(135deg, #0091ff, #005fcc);
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,95,204,0.7);
+  box-shadow: 0 6px 15px rgba(0, 95, 204, 0.7);
 }
 
 #end-call {
