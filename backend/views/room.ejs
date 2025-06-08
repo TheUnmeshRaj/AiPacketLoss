@@ -34,9 +34,9 @@
     </div>
     <div class="header-right">
       <div class="time-display" id="time-display">00:00</div>
-      <button class="settings-btn" id="settings-btn">
-        <i class="fas fa-cog"></i>
-        Settings
+      <button class="monitor-btn" id="monitor-btn">
+        <i class="fas fa-chart-line"></i> <!-- Or whatever icon -->
+        Monitor Metrics
       </button>
     </div>
   </header>
@@ -174,14 +174,11 @@
 
     document.getElementById('participants-list').addEventListener('click', function() {});
 
-    document.getElementById('settings-btn').addEventListener('click', function() {
+    document.getElementById('monitor-btn').addEventListener('click', function() {
+  window.open('http://127.0.0.1:5000', '_blank');
+});
 
-      fetch('/run-something')
-        .then(res => res.text())
-        .then(console.log);
-    });
-
-    document.getElementById('more-options').addEventListener('click', function() {});
+document.getElementById('more-options').addEventListener('click', function() {});
 
     navigator.mediaDevices.getUserMedia({
         video: true,
