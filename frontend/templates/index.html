@@ -2,133 +2,178 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Video Call Quality Monitor</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
+  <style>
+    /* Hide all sections by default */
+    .content-section {
+      display: none;
+    }
+
+    /* Show active section */
+    .content-section.active {
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-  <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <span class="fw-bold">ConferenceRoom Monitor</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#"><i class="fas fa-tachometer-alt me-1"></i>Live Monitoring</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fas fa-network-wired me-1"></i>Quality Prediction</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fas fa-chart-line me-1"></i>Call Analysis</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i>AI Suggestion</a>
-        </li>
-      </ul>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <span class="fw-bold">ConferenceRoom Monitor</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#" data-target="liveMonitoring">
+              <i class="fas fa-tachometer-alt me-1"></i>Live Monitoring
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-target="qualityPrediction">
+              <i class="fas fa-network-wired me-1"></i>Quality Prediction
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-target="callAnalysis">
+              <i class="fas fa-chart-line me-1"></i>Call Analysis
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-target="aiSuggestion">
+              <i class="fas fa-cog me-1"></i>AI Suggestion
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
   <div class="container mt-4">
-    <div class="row">
-      <!-- Control Panel -->
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Control Panel</h5>
-          </div>
-          <div class="card-body">
-            <form id="monitoringForm">
-              <div class="mb-3">
-                <label for="interface" class="form-label">Network Interface</label>
-                <select class="form-select" id="interface" required>
-                  <option value="">Loading interfaces...</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="targetHost" class="form-label">Target Host</label>
-                <input type="text" class="form-control" id="targetHost" value="auto">
-              </div>
-              <div class="mb-3">
-                <label for="duration" class="form-label">Duration (seconds)</label>
-                <input type="number" class="form-control" id="duration" value="3600">
-              </div>
-              <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary" id="startBtn">Start Monitoring</button>
-                <button type="button" class="btn btn-danger" id="stopBtn" disabled>Stop Monitoring</button>
-                <button type="button" class="btn btn-success" id="downloadBtn" disabled>
-                  <i class="fas fa-download"></i> Download Data
-                </button>
-                <button type="button" class="btn btn-info" id="analysisBtn" disabled>
-                  <i class="fas fa-chart-line"></i> Show Analysis
-                </button>
-              </div>
-            </form>
+    <!-- Live Monitoring Section -->
+    <section id="liveMonitoring" class="content-section active">
+      <div class="row">
+        <!-- Control Panel -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Control Panel</h5>
+            </div>
+            <div class="card-body">
+              <form id="monitoringForm">
+                <div class="mb-3">
+                  <label for="interface" class="form-label">Network Interface</label>
+                  <select class="form-select" id="interface" required>
+                    <option value="Wi-Fi 2">Wi-Fi 2</option>
+                    <!-- You can add more options dynamically if needed -->
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="targetHost" class="form-label">Target Host</label>
+                  <input type="text" class="form-control" id="targetHost" value="https://conferencevideo.onrender.com/PIHU" />
+                </div>
+                <div class="mb-3">
+                  <label for="duration" class="form-label">Duration (seconds)</label>
+                  <input type="number" class="form-control" id="duration" value="3600" />
+                </div>
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary" id="startBtn">Start Monitoring</button>
+                  <button type="button" class="btn btn-danger" id="stopBtn" disabled>Stop Monitoring</button>
+                  <button type="button" class="btn btn-success" id="downloadBtn" disabled>
+                    <i class="fas fa-download"></i> Download Data
+                  </button>
+                  <button type="button" class="btn btn-info" id="analysisBtn" disabled>
+                    <i class="fas fa-chart-line"></i> Show Analysis
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Real-time Metrics -->
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Real-time Metrics</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                <canvas id="packetLossChart"></canvas>
-              </div>
-              <div class="col-md-6">
-                <canvas id="latencyChart"></canvas>
-              </div>
+        <!-- Real-time Metrics -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Real-time Metrics</h5>
             </div>
-            <div class="row mt-4">
-              <div class="col-md-6">
-                <canvas id="jitterChart"></canvas>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <canvas id="packetLossChart"></canvas>
+                </div>
+                <div class="col-md-6">
+                  <canvas id="latencyChart"></canvas>
+                </div>
               </div>
-              <div class="col-md-6">
-                <canvas id="bandwidthChart"></canvas>
+              <div class="row mt-4">
+                <div class="col-md-6">
+                  <canvas id="jitterChart"></canvas>
+                </div>
+                <div class="col-md-6">
+                  <canvas id="bandwidthChart"></canvas>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Quality Analysis -->
-    <div class="row mt-4">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Quality Analysis</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                <canvas id="qualityScoreChart"></canvas>
-              </div>
-              <div class="col-md-6">
-                <canvas id="featureImportanceChart"></canvas>
-              </div>
+    <!-- Quality Prediction Section (Placeholder) -->
+    <section id="qualityPrediction" class="content-section">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Quality Prediction</h5>
+        </div>
+        <div class="card-body">
+          <p>To be made</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call Analysis Section -->
+    <section id="callAnalysis" class="content-section">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Quality Analysis</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <canvas id="qualityScoreChart"></canvas>
+            </div>
+            <div class="col-md-6">
+              <canvas id="featureImportanceChart"></canvas>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- AI Suggestion Section (Placeholder) -->
+    <section id="aiSuggestion" class="content-section">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">AI Suggestion</h5>
+        </div>
+        <div class="card-body">
+          <p>To be made</p>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- Analysis Modal -->
+  <!-- Analysis Modal (unchanged) -->
   <div class="modal fade" id="analysisModal" tabindex="-1" aria-labelledby="analysisModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -179,6 +224,30 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+  <script>
+    // Simple nav switcher to toggle content sections
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.content-section');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+
+        // Remove active class from all links and sections
+        navLinks.forEach(l => l.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+
+        // Add active to clicked link
+        link.classList.add('active');
+
+        // Show related section
+        const targetId = link.getAttribute('data-target');
+        if (targetId) {
+          document.getElementById(targetId).classList.add('active');
+        }
+      });
+    });
+  </script>
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 

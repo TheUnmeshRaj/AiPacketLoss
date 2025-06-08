@@ -178,6 +178,7 @@ async function loadNetworkInterfaces() {
     }
 }
 
+
 // Download data
 document.getElementById('downloadBtn').addEventListener('click', async () => {
     const downloadBtn = document.getElementById('downloadBtn');
