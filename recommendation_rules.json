@@ -1,0 +1,58 @@
+{
+    "packet_loss": {
+        "critical": {
+            "threshold": 10,
+            "weight": 2.0
+        },
+        "high": {
+            "threshold": 5,
+            "weight": 1.5
+        },
+        "moderate": {
+            "threshold": 2,
+            "weight": 1.0
+        }
+    },
+    "latency": {
+        "critical": {
+            "threshold": 200,
+            "weight": 2.0
+        },
+        "high": {
+            "threshold": 100,
+            "weight": 1.5
+        },
+        "moderate": {
+            "threshold": 50,
+            "weight": 1.0
+        }
+    },
+    "jitter": {
+        "critical": {
+            "threshold": 50,
+            "weight": 2.0
+        },
+        "high": {
+            "threshold": 20,
+            "weight": 1.5
+        },
+        "moderate": {
+            "threshold": 10,
+            "weight": 1.0
+        }
+    },
+    "bandwidth": {
+        "critical": {
+            "threshold": 1,
+            "weight": 2.0
+        },
+        "high": {
+            "threshold": 2,
+            "weight": 1.5
+        },
+        "moderate": {
+            "threshold": 4,
+            "weight": 1.0
+        }
+    }
+}

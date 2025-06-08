@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #1d1f21, #3d3f42);
+  background-image: url('okok.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: auto;
+  color: #fff;
+  touch-action: pan-x pan-y;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+#video-grid {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 70%;
+  gap: 20px; 
+}
+
+.video-container {
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.video-container:hover {
+  transform: scale(1.03);
+}
+
+.video-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+}
+
+.participant-name {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+video {
+ width: 1600px;
+  height: 1400px;
+
+  border-radius: 25px;
+  object-fit: cover;
+  background: #000;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  pointer-events: auto;
+}
+
+video:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+#controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 999;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#controls:hover {
+  background: rgba(21, 46, 27, 0.8);
+  transition: background 0.3s;
+}
+
+button {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(0, 114, 255, 0.5);
+}
+
+button i {
+  font-size: 1.3rem;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #0091ff, #005fcc);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 95, 204, 0.7);
+}
+
+#end-call {
+  background: #ff4d4d;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.6);
+}
+
+#end-call:hover {
+  background: #d93636;
+  box-shadow: 0 6px 15px rgba(217, 54, 54, 0.8);
+  transform: translateY(-3px);
+}
