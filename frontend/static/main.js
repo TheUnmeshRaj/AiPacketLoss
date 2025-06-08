@@ -1,4 +1,3 @@
-// Chart configurations
 const chartConfigs = {
     packetLoss: {
         type: 'line',

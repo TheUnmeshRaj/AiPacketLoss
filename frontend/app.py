@@ -19,8 +19,7 @@ from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
-# Create data directory if it doesn't exist
-DATA_DIR = 'data'
+DATA_DIR = 'frontend/data'
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
