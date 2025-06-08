@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  
+
   <title>Conference Room - Professional Video Calling</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles/new.css">
+  <link rel="stylesheet" href="/styles/room.css">
   <script>
-    const ROOM_ID =  "<%= roomId %>";
+    const ROOM_ID = "<%= roomId %>";
   </script>
 
   <script defer src="https://unpkg.com/peerjs@latest/dist/peerjs.min.js"></script>
@@ -40,11 +41,10 @@
     </div>
   </header>
 
-<div class="main-container">
-  <div id="video-grid">
-
+  <div class="main-container">
+    <div id="video-grid">
+    </div>
   </div>
-</div>
 
   <div id="controls">
     <div class="control-group">
@@ -57,12 +57,11 @@
       <button class="control-btn" id="screen-share" title="Share Screen">
         <i class="fas fa-desktop"></i>
       </button>
+      <button class="control-btn" id="take-notes" title="Start Noting">
+        <i class="fas fa-sticky-note"></i>
+      </button>
     </div>
-    
-    <button class="control-btn" id="end-call" title="End Call">
-      <i class="fas fa-phone-slash"></i>
-    </button>
-    
+
     <div class="control-group">
       <button class="control-btn" id="chat-toggle" title="Toggle Chat">
         <i class="fas fa-comment"></i>
@@ -70,11 +69,15 @@
       <button class="control-btn" id="participants-list" title="Participants">
         <i class="fas fa-users"></i>
       </button>
+
+      <button class="control-btn" id="end-call" title="End Call">
+        <i class="fas fa-phone-slash"></i>
+      </button>
       <button class="more-options" id="more-options">
         <i class="fas fa-ellipsis-h"></i>
-        More
       </button>
     </div>
+
   </div>
 
 
@@ -86,14 +89,14 @@
 
       function updateTime() {
         const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', { 
-          hour12: false, 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        const timeString = now.toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
         });
         document.getElementById('time-display').textContent = timeString;
       }
-      
+
       updateTime();
       setInterval(updateTime, 1000);
 
@@ -105,7 +108,7 @@
       const button = this;
       const icon = button.querySelector('i');
       const isMuted = button.classList.contains('muted');
-      
+
       if (isMuted) {
         button.classList.remove('muted');
         icon.className = 'fas fa-microphone-slash';
@@ -113,7 +116,7 @@
         button.classList.add('muted');
         icon.className = 'fas fa-microphone';
       }
-      
+
       toggleAudio();
     });
 
@@ -121,7 +124,7 @@
       const button = this;
       const icon = button.querySelector('i');
       const isMuted = button.classList.contains('muted');
-      
+
       if (isMuted) {
         button.classList.remove('muted');
         icon.className = 'fas fa-video-slash';
@@ -129,14 +132,14 @@
         button.classList.add('muted');
         icon.className = 'fas fa-video';
       }
-      
+
       toggleVideo();
     });
 
     document.getElementById('screen-share').addEventListener('click', function() {
       const button = this;
       const icon = button.querySelector('i');
-      
+
       if (button.classList.contains('active')) {
         button.classList.remove('active');
         icon.className = 'fas fa-desktop';
@@ -147,13 +150,13 @@
     });
 
     document.getElementById('end-call').addEventListener('click', function() {
-      
+
       socket.emit('left-call', myPeer.id);
       if (myPeer) myPeer.destroy();
       if (myStream) myStream.getTracks().forEach(track => track.stop());
       socket.disconnect();
       window.location.href = '/left';
-      
+
       setTimeout(() => {
         alert('Call ended. In a real implementation, this would redirect to the goodbye page.');
       }, 1000);
@@ -161,7 +164,7 @@
 
     document.getElementById('chat-toggle').addEventListener('click', function() {
       const button = this;
-      
+
       if (button.classList.contains('active')) {
         button.classList.remove('active');
       } else {
@@ -169,20 +172,21 @@
       }
     });
 
-    document.getElementById('participants-list').addEventListener('click', function() {
-    });
+    document.getElementById('participants-list').addEventListener('click', function() {});
 
     document.getElementById('settings-btn').addEventListener('click', function() {
-      
+
       fetch('/run-something')
         .then(res => res.text())
         .then(console.log);
     });
 
-    document.getElementById('more-options').addEventListener('click', function() {
-    });
+    document.getElementById('more-options').addEventListener('click', function() {});
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      })
       .then(stream => {
         const videoElements = document.querySelectorAll('video');
         if (videoElements[0]) {
@@ -194,4 +198,5 @@
       });
   </script>
 </body>
+
 </html>

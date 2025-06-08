@@ -7,7 +7,6 @@ let myStream;
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   .then(stream => {
     myStream = stream;
-
     addVideoStreamToSlot(stream, 'me', 'You');
 
     myPeer.on('call', call => {
@@ -65,14 +64,11 @@ function connectToNewUser(userId, stream) {
 }
 
 function addVideoStreamToSlot(stream, userId, name = 'User') {
+  if (document.querySelector(`.video-container[data-user-id="${userId}"]`)) return;
+
   const existingSlots = document.querySelectorAll('.video-container');
-
-  for (let slot of existingSlots) {
-    if (slot.dataset.userId === userId) return;
-  }
-
-  if (existingSlots.length >= 5) {
-    console.warn('Max 5 participants reached');
+  if (existingSlots.length >= 6) {
+    console.warn('Max 6 participants reached');
     return;
   }
 
@@ -85,6 +81,9 @@ function addVideoStreamToSlot(stream, userId, name = 'User') {
   video.autoplay = true;
   video.playsInline = true;
   if (userId === 'me') video.muted = true;
+  video.addEventListener('loadedmetadata', () => {
+    video.play().catch(() => {});
+  });
 
   const overlay = document.createElement('div');
   overlay.className = 'video-overlay';
@@ -94,19 +93,56 @@ function addVideoStreamToSlot(stream, userId, name = 'User') {
   nameSpan.textContent = name;
 
   overlay.appendChild(nameSpan);
+
+  const audioIndicator = document.createElement('div');
+  audioIndicator.className = 'audio-indicator';
+
+  const wave1 = document.createElement('div');
+  wave1.className = 'audio-wave';
+  const wave2 = wave1.cloneNode();
+  const wave3 = wave1.cloneNode();
+
+  audioIndicator.appendChild(wave1);
+  audioIndicator.appendChild(wave2);
+  audioIndicator.appendChild(wave3);
+
+  overlay.appendChild(audioIndicator);
+
+  // Show/hide based on mute status AFTER video and overlay created
+  const audioTracks = stream.getAudioTracks();
+  if (audioTracks.length === 0 || !audioTracks[0].enabled) {
+    audioIndicator.style.display = 'none';
+  }
+
   slot.appendChild(video);
   slot.appendChild(overlay);
 
-  document.getElementById('video-grid').appendChild(slot);
+  videoGrid.appendChild(slot);
+  updateVideoLayout();
 }
 
-function removeUserSlot(userId) {
-  const slot = Array.from(document.querySelectorAll('.video-container'))
-    .find(s => s.dataset.userId === userId);
-  if (slot) {
-    slot.innerHTML = '';
-    slot.removeAttribute('data-user-id');
+function updateVideoLayout() {
+  const containers = document.querySelectorAll('.video-container');
+
+  containers.forEach(container => container.style.flex = '');
+
+  if (containers.length === 1) {
+    containers[0].style.flex = '1 1 100%';
+  } else if (containers.length === 2) {
+    containers.forEach(c => c.style.flex = '1 1 calc(50% - 20px)');
+  } else if (containers.length === 3) {
+    containers.forEach(c => c.style.flex = '1 1 calc(33.333% - 20px)');
+  } else {
+    containers.forEach(c => c.style.flex = '1 1 calc((100% - 40px) / 3)');
   }
+}
+
+const observer = new MutationObserver(updateVideoLayout);
+observer.observe(videoGrid, { childList: true, subtree: false });
+
+function removeUserSlot(userId) {
+  const slot = document.querySelector(`.video-container[data-user-id="${userId}"]`);
+  if (slot) slot.remove();
 }
 
 function updateParticipantCount() {
@@ -119,6 +155,16 @@ function toggleAudio() {
   if (myStream) {
     const audioTrack = myStream.getAudioTracks()[0];
     audioTrack.enabled = !audioTrack.enabled;
+
+    document.querySelectorAll('.video-container').forEach(container => {
+      if (container.dataset.userId === 'me') {
+        const indicator = container.querySelector('.audio-indicator');
+        if (indicator) {
+          indicator.style.display = audioTrack.enabled ? 'flex' : 'none';
+        }
+      }
+    });
+
     return audioTrack.enabled ? 'Unmute' : 'Mute';
   }
 }
