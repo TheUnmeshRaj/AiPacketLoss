@@ -91,9 +91,7 @@
                   <button type="button" class="btn btn-success" id="downloadBtn" disabled>
                     <i class="fas fa-download"></i> Download Data
                   </button>
-                  <button type="button" class="btn btn-info" id="analysisBtn" disabled>
-                    <i class="fas fa-chart-line"></i> Show Analysis
-                  </button>
+                  
                 </div>
               </form>
             </div>
@@ -142,46 +140,51 @@
     </section>
 
     <!-- Call Analysis Section -->
-     <div class="row mt-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0">Call Analysis</h5>
-      </div>
-      <div class="card-body">
-        <!-- Historical Packet Loss -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h6 class="card-title mb-0">Packet Loss Analysis</h6>
-          </div>
-          <div class="card-body">
-            <canvas id="historicalPacketLossChart"></canvas>
-          </div>
-        </div>
 
-        <!-- Historical Jitter -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h6 class="card-title mb-0">Jitter Analysis</h6>
-          </div>
-          <div class="card-body">
-            <canvas id="historicalJitterChart"></canvas>
-          </div>
-        </div>
+    <section id="callAnalysis" class="content-section">
 
-        <!-- Historical Bandwidth -->
+    <div class="row mt-4">
+      <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h6 class="card-title mb-0">Bandwidth Analysis</h6>
+            <h5 class="card-title mb-0">Call Analysis</h5>
           </div>
           <div class="card-body">
-            <canvas id="historicalBandwidthChart"></canvas>
+            <!-- Historical Packet Loss -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Packet Loss Analysis</h6>
+              </div>
+              <div class="card-body">
+                <canvas id="historicalPacketLossChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Historical Jitter -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Jitter Analysis</h6>
+              </div>
+              <div class="card-body">
+                <canvas id="historicalJitterChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Historical Bandwidth -->
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Bandwidth Analysis</h6>
+              </div>
+              <div class="card-body">
+                <canvas id="historicalBandwidthChart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+</section>
+
     <!-- AI Suggestion Section (Placeholder) -->
     <section id="aiSuggestion" class="content-section">
       <div class="card">

@@ -82,24 +82,23 @@ const chartConfigs = {
     }
 };
 
-// Initialize charts
 const charts = {};
 Object.keys(chartConfigs).forEach(key => {
     const ctx = document.getElementById(`${key}Chart`).getContext('2d');
     charts[key] = new Chart(ctx, chartConfigs[key]);
 });
 
-// Historical charts
 let historicalCharts = {};
+let qualityScoreChart = null;
+let dataCollectionInterval = null;
 
 function createHistoricalChart(canvasId, label, data, color, metricKey) {
     const ctx = document.getElementById(canvasId).getContext('2d');
-    
-    // Destroy existing chart if it exists
+
     if (historicalCharts[canvasId]) {
         historicalCharts[canvasId].destroy();
     }
-    
+
     historicalCharts[canvasId] = new Chart(ctx, {
         type: 'line',
         data: {
@@ -127,18 +126,12 @@ function createHistoricalChart(canvasId, label, data, color, metricKey) {
                     callbacks: {
                         label: function(context) {
                             let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
+                            if (label) label += ': ';
                             if (context.parsed.y !== null) {
                                 label += context.parsed.y.toFixed(2);
-                                if (label.includes('Packet Loss')) {
-                                    label += '%';
-                                } else if (label.includes('Jitter')) {
-                                    label += ' ms';
-                                } else if (label.includes('Bandwidth')) {
-                                    label += ' Mbps';
-                                }
+                                if (label.includes('Packet Loss')) label += '%';
+                                else if (label.includes('Jitter')) label += ' ms';
+                                else if (label.includes('Bandwidth')) label += ' Mbps';
                             }
                             return label;
                         }
@@ -153,79 +146,64 @@ function createHistoricalChart(canvasId, label, data, color, metricKey) {
                     }
                 },
                 y: {
+                    beginAtZero: true,
                     title: {
                         display: true,
                         text: label
-                    },
-                    beginAtZero: true
+                    }
                 }
             }
         }
     });
 }
 
-// Load network interfaces
 async function loadNetworkInterfaces() {
     try {
         const response = await fetch('/api/network-interfaces');
         const interfaces = await response.json();
         const select = document.getElementById('interface');
-        select.innerHTML = interfaces.map(iface => 
-            `<option value="${iface}">${iface}</option>`
-        ).join('');
+        select.innerHTML = interfaces.map(iface => `<option value="${iface}">${iface}</option>`).join('');
     } catch (error) {
         console.error('Error loading network interfaces:', error);
     }
 }
 
-
-// Download data
 document.getElementById('downloadBtn').addEventListener('click', async () => {
     const downloadBtn = document.getElementById('downloadBtn');
     const originalText = downloadBtn.innerHTML;
-    
+
     try {
         downloadBtn.disabled = true;
         downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing Download...';
-        
+
         const response = await fetch('/api/save-data');
         const data = await response.json();
-        
+
+        const alertDiv = document.createElement('div');
         if (data.status === 'success') {
-            // Create a temporary link to download the file
             const link = document.createElement('a');
             link.href = `/api/download/${data.filename}`;
             link.download = data.filename;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
-            // Show success message
-            const alertDiv = document.createElement('div');
+
             alertDiv.className = 'alert alert-success alert-dismissible fade show';
             alertDiv.innerHTML = `
                 <strong>Success!</strong> Your data has been downloaded.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
-            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
-            
-            // Remove alert after 5 seconds
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
         } else {
-            // Show error message
-            const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-warning alert-dismissible fade show';
             alertDiv.innerHTML = `
                 <strong>Warning!</strong> ${data.message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
-            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
         }
+        document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.row'));
+        setTimeout(() => alertDiv.remove(), 5000);
     } catch (error) {
         console.error('Error downloading data:', error);
-        // Show error message
         const alertDiv = document.createElement('div');
         alertDiv.className = 'alert alert-danger alert-dismissible fade show';
         alertDiv.innerHTML = `
@@ -239,21 +217,20 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
     }
 });
 
-// Show analysis
 document.getElementById('analysisBtn').addEventListener('click', async () => {
     try {
         const response = await fetch('/api/get-data');
         const data = await response.json();
-        
+
         if (data.length > 0) {
-            // Create historical charts with specific metric keys
             createHistoricalChart('historicalPacketLossChart', 'Packet Loss (%)', data, '#dc3545', 'packet_loss');
             createHistoricalChart('historicalJitterChart', 'Jitter (ms)', data, '#0dcaf0', 'jitter');
             createHistoricalChart('historicalBandwidthChart', 'Bandwidth (Mbps)', data, '#198754', 'bandwidth');
-            
-            // Create quality score chart
+
             const qualityScoreCtx = document.getElementById('qualityScoreChart').getContext('2d');
-            new Chart(qualityScoreCtx, {
+            if (qualityScoreChart) qualityScoreChart.destroy();
+
+            qualityScoreChart = new Chart(qualityScoreCtx, {
                 type: 'line',
                 data: {
                     labels: data.map(d => new Date(d.timestamp * 1000).toLocaleTimeString()),
@@ -296,8 +273,7 @@ document.getElementById('analysisBtn').addEventListener('click', async () => {
                     }
                 }
             });
-            
-            // Show modal
+
             const modal = new bootstrap.Modal(document.getElementById('analysisModal'));
             modal.show();
         } else {
@@ -309,7 +285,6 @@ document.getElementById('analysisBtn').addEventListener('click', async () => {
     }
 });
 
-// Update button states
 function updateButtonStates(isMonitoring) {
     document.getElementById('startBtn').disabled = isMonitoring;
     document.getElementById('stopBtn').disabled = !isMonitoring;
@@ -317,7 +292,6 @@ function updateButtonStates(isMonitoring) {
     document.getElementById('analysisBtn').disabled = !isMonitoring;
 }
 
-// Start monitoring
 document.getElementById('monitoringForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = {
@@ -329,12 +303,10 @@ document.getElementById('monitoringForm').addEventListener('submit', async (e) =
     try {
         const response = await fetch('/api/start-monitoring', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-        
+
         const data = await response.json();
         if (data.status === 'success') {
             updateButtonStates(true);
@@ -348,41 +320,44 @@ document.getElementById('monitoringForm').addEventListener('submit', async (e) =
     }
 });
 
-// Stop monitoring
 document.getElementById('stopBtn').addEventListener('click', async () => {
     try {
         await fetch('/api/stop-monitoring');
         updateButtonStates(false);
+
+        if (dataCollectionInterval) {
+            clearInterval(dataCollectionInterval);
+            dataCollectionInterval = null;
+        }
     } catch (error) {
         console.error('Error stopping monitoring:', error);
         alert('Error stopping monitoring');
     }
 });
 
-// Update charts with new data
 function updateCharts(data) {
     const timestamp = new Date().toLocaleTimeString();
-    
     Object.keys(charts).forEach(key => {
         const chart = charts[key];
         const value = data[key];
-        
+
         chart.data.labels.push(timestamp);
         chart.data.datasets[0].data.push(value);
-        
-        // Keep only last 20 data points
+
         if (chart.data.labels.length > 20) {
             chart.data.labels.shift();
             chart.data.datasets[0].data.shift();
         }
-        
+
         chart.update();
     });
 }
 
-// Collect data periodically
-let dataCollectionInterval;
 function startDataCollection() {
+    if (dataCollectionInterval) {
+        clearInterval(dataCollectionInterval);
+    }
+
     dataCollectionInterval = setInterval(async () => {
         try {
             const response = await fetch('/api/get-data');
@@ -396,7 +371,7 @@ function startDataCollection() {
     }, 1000);
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadNetworkInterfaces();
-}); 
+    updateButtonStates(false);
+});
