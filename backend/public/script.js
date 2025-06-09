@@ -52,16 +52,55 @@ myPeer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id);
 });
 
+
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream);
   call.on('stream', userVideoStream => {
     addVideoStreamToSlot(userVideoStream, userId, `User ${userId}`);
   });
+
   call.on('close', () => {
     removeUserSlot(userId);
   });
+
   peers[userId] = call;
+
+  // 🧠 Add dynamic quality monitoring here
+  // const pc = call.peerConnection;
+  const pc = myPeer._connections?.[userId]?.[0]?.peerConnection || null;
+
+  // const pc = myPeer._connections ? Object.values(myPeer._connections)[0]?.[0]?.peerConnection : null;
+
+  if (pc) {
+    setInterval(() => {
+      pc.getStats(null).then(stats => {
+        stats.forEach(report => {
+          if (report.type === 'outbound-rtp' && report.kind === 'video') {
+            const loss = report.packetsLost || 0;
+            const bitrate = report.bitrateMean || 0;
+
+            console.log('Bitrate:', bitrate, 'Packet Loss:', loss);
+            console.log('PC:', pc);
+            console.log('Report:', report);
+
+            if (loss > 50 || bitrate < 100000) {
+              stream.getVideoTracks()[0].applyConstraints({
+                width: { ideal: 320 },
+                height: { ideal: 240 },
+                frameRate: { ideal: 10 }
+              }).then(() => {
+                console.log('Constraints applied');
+              }).catch(err => {
+                console.error('Constraint error:', err);
+              });
+            }
+          }
+        });
+      });
+    }, 5000);
+  }
 }
+
 
 function addVideoStreamToSlot(stream, userId, name = 'User') {
   if (document.querySelector(`.video-container[data-user-id="${userId}"]`)) return;

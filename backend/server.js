@@ -16,7 +16,6 @@ app.get('/left', (req, res) => {
   res.render('left');
 });
 
-
 app.get('/:room', (req, res) => {
   res.render('room', { roomId: req.params.room })
 })

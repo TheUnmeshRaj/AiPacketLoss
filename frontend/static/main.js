@@ -281,13 +281,13 @@ document.getElementById('analysisBtn').addEventListener('click', async () => {
         }
     } catch (error) {
         console.error('Error showing analysis:', error);
-        alert('Error showing analysis');
+        // alert('Error showing analysis');
     }
 });
 
 function updateButtonStates(isMonitoring) {
     document.getElementById('startBtn').disabled = isMonitoring;
-    document.getElementById('stopBtn').disabled = !isMonitoring;
+    // document.getElementById('stopBtn').disabled = !isMonitoring;
     document.getElementById('downloadBtn').disabled = !isMonitoring;
     document.getElementById('analysisBtn').disabled = !isMonitoring;
 }

@@ -9,17 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
-  <style>
-    /* Hide all sections by default */
-    .content-section {
-      display: none;
-    }
 
-    /* Show active section */
-    .content-section.active {
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
@@ -79,7 +69,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="targetHost" class="form-label">Target Host</label>
-                  <input type="text" class="form-control" id="targetHost" value="https://conferencevideo.onrender.com/PIHU" />
+                  <input type="text" class="form-control" id="targetHost" value="https://conferencevideo.onrender.com/test" />
                 </div>
                 <div class="mb-3">
                   <label for="duration" class="form-label">Duration (seconds)</label>
@@ -91,7 +81,6 @@
                   <button type="button" class="btn btn-success" id="downloadBtn" disabled>
                     <i class="fas fa-download"></i> Download Data
                   </button>
-                  
                 </div>
               </form>
             </div>
