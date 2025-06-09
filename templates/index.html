@@ -11,8 +11,27 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="#">Video Call Quality Monitor</a>
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary me-2" id="startBtn">Start Monitoring</button>
+                <button type="button" class="btn btn-danger me-2" id="stopBtn" disabled>Stop Monitoring</button>
+                <button type="button" class="btn btn-success me-2" id="downloadBtn" disabled>
+                    <i class="fas fa-download"></i> Download Data
+                </button>
+                <button type="button" class="btn btn-info me-2" id="analysisBtn" disabled>
+                    <i class="fas fa-chart-line"></i> Show Analysis
+                </button>
+                <button type="button" class="btn btn-warning me-2" id="trainModelBtn" disabled>
+                    <i class="fas fa-brain"></i> Train AI Model
+                </button>
+                <button type="button" class="btn btn-success me-2" id="qualityAnalysisBtn" disabled>
+                    <i class="fas fa-chart-pie"></i> Quality Analysis
+                </button>
+                <button type="button" class="btn btn-secondary" id="advancedRecommendationsBtn" disabled>
+                    <i class="fas fa-lightbulb"></i> Advanced Recommendations
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -41,23 +60,7 @@
                                 <input type="number" class="form-control" id="duration" value="3600">
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary" id="startBtn">Start Monitoring</button>
-                                <button type="button" class="btn btn-danger" id="stopBtn" disabled>Stop Monitoring</button>
-                                <button type="button" class="btn btn-success" id="downloadBtn" disabled>
-                                    <i class="fas fa-download"></i> Download Data
-                                </button>
-                                <button type="button" class="btn btn-info" id="analysisBtn" disabled>
-                                    <i class="fas fa-chart-line"></i> Show Analysis
-                                </button>
-                                <button type="button" class="btn btn-warning" id="trainModelBtn" disabled>
-                                    <i class="fas fa-brain"></i> Train AI Model
-                                </button>
-                                <button type="button" class="btn btn-success" id="qualityAnalysisBtn" disabled>
-                                    <i class="fas fa-chart-pie"></i> Quality Analysis
-                                </button>
-                                <button type="button" class="btn btn-secondary" id="advancedRecommendationsBtn" disabled>
-                                    <i class="fas fa-lightbulb"></i> Advanced Recommendations
-                                </button>
+                                <!-- All buttons moved to navbar -->
                             </div>
                         </form>
                     </div>
@@ -186,7 +189,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Quality Analysis Modal -->
     <div class="modal fade" id="qualityAnalysisModal" tabindex="-1" aria-labelledby="qualityAnalysisModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">

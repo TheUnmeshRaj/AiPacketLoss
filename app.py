@@ -28,7 +28,7 @@ if not os.path.exists(DATA_DIR):
 
 # WARNING: Storing API keys directly in code is not recommended for production.
 # Use environment variables (e.g., in a .env file) instead for security.
-gemini_api_key = "AIzaSyBFoZmWBQ8W-Kjxp-C89an9EQYIsaqYngM" # <--- REPLACE THIS WITH YOUR ACTUAL KEY
+gemini_api_key = "AIzaSyAbfxnmpbaymKCzjTsiXswGMHEr1Bt72VYKEY"
 gemini_recommender = GeminiRecommender(api_key=gemini_api_key)
 if not gemini_api_key:
     print("Warning: GEMINI_API_KEY not set. Gemini recommendations will be in fallback mode.")

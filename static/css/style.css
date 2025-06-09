@@ -3,7 +3,22 @@ body {
 }
 
 .navbar {
+    padding: 1rem;
     box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.navbar .btn {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.navbar .btn i {
+    margin-right: 0.5rem;
 }
 
 .card {
@@ -27,6 +42,46 @@ body {
     color: #495057;
 }
 
+.card-body h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #212529;
+}
+
+.recommendations {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.recommendation-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.recommendation-item h6 {
+    color: #0d6efd;
+    margin-bottom: 0.5rem;
+}
+
+.recommendation-item p {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.recommendation-item .badge {
+    margin-right: 0.5rem;
+}
+
+#metricsChart {
+    min-height: 300px;
+}
+
 .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
@@ -45,6 +100,50 @@ body {
 .btn-danger:hover {
     background-color: #bb2d3b;
     border-color: #b02a37;
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+}
+
+.btn-info {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #000;
+}
+
+.btn-info:hover {
+    background-color: #31d2f2;
+    border-color: #25cff2;
+    color: #000;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+.btn-warning:hover {
+    background-color: #ffca2c;
+    border-color: #ffc720;
+    color: #000;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5c636a;
+    border-color: #565e64;
 }
 
 canvas {
@@ -128,6 +227,10 @@ canvas {
     max-width: 90%;
 }
 
+.modal-lg {
+    max-width: 800px;
+}
+
 .modal-body {
     max-height: 80vh;
     overflow-y: auto;
@@ -142,26 +245,7 @@ canvas {
     width: 100% !important;
 }
 
-/* Chart container styles */
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
-}
-
 /* Analysis button styles */
-.btn-info {
-    color: #fff;
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
-}
-
-.btn-info:hover {
-    color: #fff;
-    background-color: #31d2f2;
-    border-color: #25cff2;
-}
-
 .btn-info:disabled {
     color: #fff;
     background-color: #0dcaf0;
@@ -241,4 +325,30 @@ canvas {
     display: block;
     width: 100%;
     height: 100%;
+}
+
+#qualitySuggestionsContainer {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 } 

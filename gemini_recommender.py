@@ -174,167 +174,184 @@ class GeminiRecommender:
         
         # Packet Loss Analysis
         if packet_loss > 10:
-            recommendations.append("""Critical Packet Loss ({}%):
-• Root Cause: Likely network congestion or connection instability
+            recommendations.append(f"""Critical Packet Loss ({packet_loss}%):
+• Root Cause: Severe network congestion, damaged cabling, faulty hardware (router, modem), or significant wireless interference.
 • Immediate Actions:
-  - Check for network congestion by monitoring bandwidth usage
-  - Reduce video quality settings
-  - Switch to a wired connection if using WiFi
-  - Close bandwidth-intensive applications
+  - Restart your router and modem.
+  - Disconnect unnecessary devices from your network.
+  - Use a wired (Ethernet) connection if on Wi-Fi.
+  - Temporarily reduce streaming quality or stop large downloads.
 • Long-term Solutions:
-  - Consider upgrading your internet plan
-  - Implement QoS (Quality of Service) settings on your router
-  - Use a network monitoring tool to identify patterns
-  - Consider using a different network path or VPN""".format(packet_loss))
+  - Inspect and replace damaged Ethernet cables.
+  - Upgrade aging network hardware (router, modem).
+  - Implement QoS (Quality of Service) settings on your router to prioritize critical traffic (e.g., video calls).
+  - Contact your Internet Service Provider (ISP) to report network issues or inquire about line quality.
+  - Consider a mesh Wi-Fi system if you have coverage issues.
+  - Use network analysis tools to identify specific sources of congestion.
+""".format(packet_loss))
         elif packet_loss > 5:
-            recommendations.append("""High Packet Loss ({}%):
-• Root Cause: Possible network interference or suboptimal settings
+            recommendations.append(f"""High Packet Loss ({packet_loss}%):
+• Root Cause: Moderate network congestion, Wi-Fi interference, outdated network drivers, or minor hardware issues.
 • Immediate Actions:
-  - Check for network interference sources
-  - Optimize network settings
-  - Monitor application bandwidth usage
-  - Consider using a network buffer
+  - Move closer to your Wi-Fi router or eliminate physical obstructions.
+  - Update your network adapter drivers.
+  - Check for background applications consuming bandwidth.
+  - Temporarily disable VPNs or proxies.
 • Long-term Solutions:
-  - Implement QoS settings
-  - Update network drivers
-  - Consider network path optimization
-  - Monitor and maintain network equipment""".format(packet_loss))
+  - Change your Wi-Fi channel to avoid interference.
+  - Optimize router settings (e.g., enable WMM, disable old protocols).
+  - Consider a Wi-Fi extender or upgrading to a dual-band router.
+  - Regularly monitor network performance to identify patterns.
+  - Implement a basic QoS policy.
+""".format(packet_loss))
         elif packet_loss > 2:
-            recommendations.append("""Moderate Packet Loss ({}%):
-• Root Cause: Normal network variation or minor interference
+            recommendations.append(f"""Moderate Packet Loss ({packet_loss}%):
+• Root Cause: Minor network fluctuations, occasional Wi-Fi instability, or background network activity.
 • Immediate Actions:
-  - Monitor network usage patterns
-  - Check for background applications
-  - Ensure stable network connection
-  - Verify network settings
+  - Pause large downloads or updates.
+  - Ensure no other devices are heavily using the network.
+  - Restart your device.
+  - Briefly disable and re-enable your network adapter.
 • Long-term Solutions:
-  - Regular network maintenance
-  - Keep network drivers updated
-  - Monitor network performance trends
-  - Implement basic QoS settings""".format(packet_loss))
+  - Keep operating system and application software updated.
+  - Consider using powerline adapters for stable connections where Wi-Fi is weak.
+  - Perform regular network maintenance and checks.
+  - Use a network monitoring dashboard to track trends.
+""".format(packet_loss))
             
         # Latency Analysis
         if latency > 200:
-            recommendations.append("""Very High Latency ({}ms):
-• Root Cause: Distance to server or network congestion
+            recommendations.append(f"""Very High Latency ({latency}ms):
+• Root Cause: Significant geographical distance to server, severe network congestion, or multiple hops/poor routing.
 • Immediate Actions:
-  - Check server distance and consider using a closer server
-  - Verify network path efficiency
-  - Check for network congestion
-  - Consider using a wired connection
+  - Try connecting to a server closer to your location if applicable.
+  - Reduce the number of active network connections.
+  - Temporarily disable firewalls or security software.
+  - Avoid peak network usage hours if possible.
 • Long-term Solutions:
-  - Upgrade internet plan if bandwidth is limited
-  - Implement network optimization
-  - Consider using a CDN
-  - Regular network path analysis""".format(latency))
+  - Upgrade your internet plan for higher bandwidth if bandwidth is a bottleneck.
+  - Implement network optimization techniques (e.g., fast path, traffic shaping).
+  - Use a VPN with servers closer to your target destination.
+  - Consider a CDN (Content Delivery Network) for content delivery.
+  - Consult with your ISP about routing optimizations.
+""".format(latency))
         elif latency > 100:
-            recommendations.append("""High Latency ({}ms):
-• Root Cause: Suboptimal network path or settings
+            recommendations.append(f"""High Latency ({latency}ms):
+• Root Cause: Suboptimal network routing, moderate congestion, or outdated network equipment.
 • Immediate Actions:
-  - Check network path efficiency
-  - Optimize network settings
-  - Consider using a wired connection
-  - Monitor background processes
+  - Close unnecessary browser tabs and applications.
+  - Check for any ongoing system updates.
+  - Ensure your device is not overheating.
+  - Try restarting your router.
 • Long-term Solutions:
-  - Network path optimization
-  - Regular network maintenance
-  - Update network equipment
-  - Consider network upgrades""".format(latency))
+  - Optimize router settings (e.g., enable QoS, update firmware).
+  - Consider upgrading to a newer router or modem.
+  - Regularly clean up temporary internet files and browser cache.
+  - Investigate alternative DNS servers (e.g., Google DNS, Cloudflare DNS).
+""".format(latency))
         elif latency > 50:
-            recommendations.append("""Moderate Latency ({}ms):
-• Root Cause: Normal network conditions
+            recommendations.append(f"""Moderate Latency ({latency}ms):
+• Root Cause: Normal internet routing, minor local network activity, or distance to server.
 • Immediate Actions:
-  - Monitor network performance
-  - Check for background applications
-  - Verify network settings
-  - Ensure optimal configuration
+  - Limit background data usage.
+  - Verify no large files are downloading.
+  - Ensure your device is connected to the optimal Wi-Fi band (2.4GHz vs 5GHz).
+  - Check for any open applications that might be connecting to distant servers.
 • Long-term Solutions:
-  - Regular performance monitoring
-  - Network optimization
-  - Keep equipment updated
-  - Maintain network health""".format(latency))
+  - Maintain network health through regular router reboots.
+  - Consider reducing the number of devices on your network.
+  - Ensure sufficient bandwidth for your household needs.
+  - Optimize in-home network cabling for stability.
+""".format(latency))
             
         # Jitter Analysis
         if jitter > 50:
-            recommendations.append("""Severe Jitter ({}ms):
-• Root Cause: Network instability or congestion
+            recommendations.append(f"""Severe Jitter ({jitter}ms):
+• Root Cause: Highly unstable network connection, severe congestion, or significant packet reordering.
 • Immediate Actions:
-  - Enable QoS on your router
-  - Check for network congestion
-  - Use a wired connection
-  - Monitor network stability
+  - Enable QoS on your router to prioritize real-time traffic.
+  - Close all other network-intensive applications.
+  - Use a wired Ethernet connection.
+  - If using Wi-Fi, try moving closer to the router or reduce interference sources.
 • Long-term Solutions:
-  - Upgrade network equipment
-  - Implement traffic shaping
-  - Regular network maintenance
-  - Consider network path optimization""".format(jitter))
+  - Upgrade network equipment with better buffering capabilities.
+  - Implement traffic shaping policies on your router.
+  - Consider a dedicated internet line for critical applications.
+  - Regularly update router firmware and device drivers.
+  - Conduct detailed network diagnostics to identify the source of instability.
+""".format(jitter))
         elif jitter > 20:
-            recommendations.append("""High Jitter ({}ms):
-• Root Cause: Network interference or suboptimal settings
+            recommendations.append(f"""High Jitter ({jitter}ms):
+• Root Cause: Unstable network, moderate congestion, or varying network load.
 • Immediate Actions:
-  - Check for network interference
-  - Optimize network settings
-  - Use a network buffer
-  - Monitor network stability
+  - Minimize concurrent network activity.
+  - Check for bandwidth-hogging applications.
+  - Restart your router and device.
+  - If possible, ensure your device is the primary user on the network.
 • Long-term Solutions:
-  - Network optimization
-  - Regular maintenance
-  - Update network drivers
-  - Consider equipment upgrades""".format(jitter))
+  - Ensure your router supports 5GHz Wi-Fi for less interference.
+  - Implement bufferbloat mitigation techniques.
+  - Consider a more robust internet plan if bandwidth is consistently saturated.
+  - Regularly clear network caches on devices.
+""".format(jitter))
         elif jitter > 10:
-            recommendations.append("""Moderate Jitter ({}ms):
-• Root Cause: Normal network variation
+            recommendations.append(f"""Moderate Jitter ({jitter}ms):
+• Root Cause: Normal network variations, minor background network activity, or slight inconsistencies in packet arrival.
 • Immediate Actions:
-  - Monitor network stability
-  - Check background processes
-  - Verify network settings
-  - Ensure consistent connection
+  - Ensure background applications are not active.
+  - Check for any ongoing software updates.
+  - Briefly disconnect and reconnect to the network.
+  - Verify that your router is not placed in an enclosed space.
 • Long-term Solutions:
-  - Regular monitoring
-  - Network maintenance
-  - Keep equipment updated
-  - Optimize settings""".format(jitter))
+  - Implement consistent network maintenance schedules.
+  - Consider upgrading to a router with better processor performance.
+  - Review network device placement for optimal signal.
+  - Keep device operating systems and applications updated.
+""".format(jitter))
             
         # Bandwidth Analysis
         if bandwidth < 1:
-            recommendations.append("""Critical Bandwidth ({}Mbps):
-• Root Cause: Limited bandwidth or network congestion
+            recommendations.append(f"""Critical Bandwidth ({bandwidth}Mbps):
+• Root Cause: Severely limited internet plan, heavy network saturation, or significant issues with ISP connectivity.
 • Immediate Actions:
-  - Reduce video quality
-  - Close bandwidth-intensive applications
-  - Check for network throttling
-  - Monitor bandwidth usage
+  - Reduce video stream quality to the lowest setting.
+  - Close all other applications and devices using the internet.
+  - Restart your modem and router.
+  - Contact your ISP immediately to check for outages or throttling.
 • Long-term Solutions:
-  - Upgrade internet plan
-  - Optimize network settings
-  - Consider bandwidth management
-  - Regular network maintenance""".format(bandwidth))
+  - **Urgent:** Upgrade your internet plan to meet your usage needs.
+  - Implement strict bandwidth management and QoS policies.
+  - Consider a dedicated business internet line if critical for operations.
+  - Analyze network traffic to identify bandwidth-hogging applications or users.
+""".format(bandwidth))
         elif bandwidth < 2:
-            recommendations.append("""Low Bandwidth ({}Mbps):
-• Root Cause: Limited bandwidth allocation
+            recommendations.append(f"""Low Bandwidth ({bandwidth}Mbps):
+• Root Cause: Insufficient internet plan for current usage, multiple concurrent users, or background downloads/updates.
 • Immediate Actions:
-  - Check network usage
-  - Optimize video settings
-  - Monitor bandwidth consumption
-  - Close unnecessary applications
+  - Close all unused applications and browser tabs.
+  - Ask other users on your network to reduce their internet activity.
+  - Check for cloud syncs or large updates running in the background.
+  - Temporarily reduce resolution or quality of streaming services.
 • Long-term Solutions:
-  - Consider plan upgrade
-  - Network optimization
-  - Regular monitoring
-  - Bandwidth management""".format(bandwidth))
+  - Upgrade your internet plan to a higher speed tier.
+  - Implement a robust QoS strategy on your router to prioritize essential traffic.
+  - Schedule large downloads/updates for off-peak hours.
+  - Educate household members on bandwidth-intensive activities.
+""".format(bandwidth))
         elif bandwidth < 4:
-            recommendations.append("""Moderate Bandwidth ({}Mbps):
-• Root Cause: Normal bandwidth allocation
+            recommendations.append(f"""Moderate Bandwidth ({bandwidth}Mbps):
+• Root Cause: Adequate but potentially strained bandwidth, common during peak usage or with multiple active streams.
 • Immediate Actions:
-  - Monitor bandwidth usage
-  - Check for background downloads
-  - Optimize network settings
-  - Verify connection stability
+  - Optimize video quality settings to a comfortable level.
+  - Ensure no large files are uploading/downloading.
+  - Check for other devices consuming bandwidth.
+  - Consider using a browser extension to block ads and trackers that consume bandwidth.
 • Long-term Solutions:
-  - Regular monitoring
-  - Network optimization
-  - Keep equipment updated
-  - Maintain network health""".format(bandwidth))
+  - Regularly monitor bandwidth usage to understand patterns.
+  - Consider optimizing router settings for better throughput.
+  - Review your internet plan periodically against your actual usage.
+  - Ensure all network drivers are up-to-date for optimal performance.
+""".format(bandwidth))
         
         # Add overall network health assessment
         overall_score = 100 - (
@@ -346,41 +363,44 @@ class GeminiRecommender:
         overall_score = max(0, min(100, overall_score))
         
         if overall_score < 50:
-            recommendations.append("""Overall Network Health: Critical
-• Current Status: Network performance is significantly degraded
+            recommendations.append("""Overall Network Health: Critical - Immediate Attention Required
+• Current Status: Your network performance is severely compromised, likely impacting all online activities, especially real-time applications like video calls. This requires urgent intervention.
 • Immediate Priority:
-  - Address critical issues first (packet loss, latency)
-  - Implement all recommended immediate actions
-  - Consider temporary quality reduction
+  - Focus on addressing the most critical metrics first (e.g., packet loss > 10%, latency > 200ms).
+  - Implement all recommended immediate actions for the problematic metrics without delay.
+  - Temporarily reduce the quality settings of all online services to conserve bandwidth.
 • Long-term Strategy:
-  - Comprehensive network upgrade plan
-  - Regular monitoring and maintenance
-  - Consider professional network assessment
-  - Implement all recommended long-term solutions""")
+  - Develop a comprehensive network upgrade and optimization plan.
+  - Engage professional network assessment if issues persist.
+  - Prioritize long-term solutions such as ISP upgrades, new hardware, and advanced QoS configurations.
+  - Establish continuous monitoring to track recovery and prevent future degradation.
+""")
         elif overall_score < 70:
-            recommendations.append("""Overall Network Health: Needs Improvement
-• Current Status: Network performance is below optimal
+            recommendations.append("""Overall Network Health: Needs Improvement - Monitor Closely
+• Current Status: Your network performance is below optimal, leading to noticeable disruptions, particularly in video calls. Improvements are needed to enhance stability and quality.
 • Immediate Priority:
-  - Address high-priority issues
-  - Implement key recommendations
-  - Monitor improvements
+  - Address high-priority issues (e.g., packet loss > 5%, latency > 100ms, jitter > 20ms).
+  - Implement key recommendations for specific metrics to achieve quick wins.
+  - Monitor closely to observe the impact of applied changes.
 • Long-term Strategy:
-  - Regular performance monitoring
-  - Gradual implementation of improvements
-  - Network optimization plan
-  - Regular maintenance schedule""")
+  - Plan for gradual implementation of recommended improvements.
+  - Optimize network configurations and regularly maintain your equipment.
+  - Consider incremental upgrades to your internet plan or hardware if persistent issues are observed.
+  - Focus on consistent performance monitoring to identify recurring problems.
+""")
         else:
-            recommendations.append("""Overall Network Health: Good
-• Current Status: Network performance is acceptable
+            recommendations.append("""Overall Network Health: Good - Maintain and Monitor
+• Current Status: Your network performance is generally stable and meets most requirements. Occasional minor fluctuations are normal.
 • Immediate Priority:
-  - Monitor for any degradation
-  - Maintain current settings
-  - Watch for trends
+  - Continue monitoring for any signs of degradation.
+  - Maintain current network settings and configurations.
+  - No immediate actions are typically required unless specific symptoms arise.
 • Long-term Strategy:
-  - Regular monitoring
-  - Preventive maintenance
-  - Keep systems updated
-  - Document performance patterns""")
+  - Implement preventive maintenance practices (e.g., regular router reboots).
+  - Keep network devices and software updated.
+  - Document performance baselines to easily detect future anomalies.
+  - Stay informed about new network technologies that could further enhance performance.
+""")
         
         return {
             'analysis': "\n\n".join(recommendations),
@@ -390,22 +410,23 @@ class GeminiRecommender:
         }
     
     def _create_prompt(self, metrics: Dict) -> str:
-        """Create a detailed prompt for the Gemini model"""
+        """Create a detailed prompt for the Gemini model for historical analysis"""
         return f"""
-        Analyze these network metrics and provide concise recommendations:
-        
-        Metrics:
-        - Packet Loss: {metrics.get('packet_loss', 0)}%
-        - Latency: {metrics.get('latency', 0)}ms
-        - Jitter: {metrics.get('jitter', 0)}ms
-        - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
-        
-        Provide:
-        1. Main issues identified
-        2. Key recommendations
-        3. Expected improvements
-        
-        Keep the response brief and focused.
+        As a network performance expert, analyze the following *average* historical network metrics and provide comprehensive insights.
+
+        Average Metrics:
+        - Packet Loss: {metrics.get('packet_loss', 0):.2f}%
+        - Latency: {metrics.get('latency', 0):.2f}ms
+        - Jitter: {metrics.get('jitter', 0):.2f}ms
+        - Bandwidth: {metrics.get('bandwidth', 0):.2f}Mbps
+
+        Based on these averages, identify:
+        1. Overall network health assessment (e.g., Excellent, Good, Moderate, Poor, Critical).
+        2. Key historical patterns or persistent issues for each metric.
+        3. Main strategic recommendations for long-term optimization and stability.
+        4. Potential impact on user experience (e.g., video calls, gaming, browsing).
+
+        Provide a structured response with clear headings and bullet points for each section.
         """
     
     def get_recommendations(self, metrics: Dict) -> Dict:
@@ -413,17 +434,18 @@ class GeminiRecommender:
         try:
             # Check cache first
             cache_key = f"recommendations_{metrics.get('timestamp', '')}"
-            if self._is_cache_valid(cache_key):
-                return self.cache[cache_key]
+            if self._get_cached_result(cache_key):
+                return self._get_cached_result(cache_key)
             
             # Check daily request limit
             if self.daily_request_count >= self.MAX_DAILY_REQUESTS:
+                print("Daily Gemini request limit reached, falling back to rules-based recommendations.")
                 return self._get_recommendations_from_rules(metrics)
             
             # Try different prompts in sequence
             prompts = [
-                # First attempt: Detailed technical analysis with context
-                f"""As a network optimization expert, analyze these network metrics and provide detailed recommendations:
+                # First attempt: Detailed technical analysis with context and thresholds
+                f"""As a senior network optimization expert, analyze these real-time network metrics and provide a highly detailed, actionable analysis with specific recommendations.
 
 Current Network Metrics:
 - Packet Loss: {metrics.get('packet_loss', 0)}%
@@ -432,38 +454,54 @@ Current Network Metrics:
 - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
 
 Context:
-- This is a real-time network monitoring system
-- Recommendations should be actionable and specific
-- Consider both immediate fixes and long-term solutions
-- Focus on practical, implementable solutions
+- This data comes from a live video call quality monitoring system.
+- Recommendations should be prioritized by impact and feasibility.
+- Consider both immediate, temporary fixes and long-term, structural solutions.
+- Include hardware, software, and configuration advice where relevant.
+- Address potential root causes (e.g., congestion, interference, distance, QoS, equipment limitations).
 
-Please provide a comprehensive analysis with the following structure:
+Please structure your response with the following sections:
 
-1. For each problematic metric:
-   - Current value and units
-   - Root cause analysis
-   - Immediate actions (4 specific steps)
-   - Long-term solutions (4 specific steps)
-   - Potential impact if not addressed
+1.  **Overall Network Health Assessment**:
+    -   A concise summary (e.g., "Good", "Fair", "Poor", "Critical").
+    -   Primary areas of concern.
 
-2. Overall network health assessment:
-   - Current status
-   - Immediate priorities
-   - Long-term strategy
-   - Risk assessment
+2.  **Detailed Metric Analysis & Recommendations**: For each metric, if problematic:
+    -   **Packet Loss ({metrics.get('packet_loss', 0)}%)**:
+        -   Severity (e.g., Critical (>10%), High (5-10%), Moderate (2-5%)).
+        -   Probable Root Causes.
+        -   Immediate Actions (e.g., "Check local network cables", "Reduce concurrent streaming").
+        -   Long-term Solutions (e.g., "Upgrade router firmware", "Implement QoS for video traffic", "Contact ISP").
+        -   Expected Impact if Addressed.
+    -   **Latency ({metrics.get('latency', 0)}ms)**:
+        -   Severity (e.g., Critical (>200ms), High (100-200ms), Moderate (50-100ms)).
+        -   Probable Root Causes.
+        -   Immediate Actions.
+        -   Long-term Solutions.
+        -   Expected Impact if Addressed.
+    -   **Jitter ({metrics.get('jitter', 0)}ms)**:
+        -   Severity (e.g., Critical (>50ms), High (20-50ms), Moderate (10-20ms)).
+        -   Probable Root Causes.
+        -   Immediate Actions.
+        -   Long-term Solutions.
+        -   Expected Impact if Addressed.
+    -   **Bandwidth ({metrics.get('bandwidth', 0)}Mbps)**:
+        -   Severity (e.g., Critical (<1Mbps), Low (1-2Mbps), Moderate (2-4Mbps)).
+        -   Probable Root Causes (e.g., oversaturation, plan limitations, multiple users).
+        -   Immediate Actions.
+        -   Long-term Solutions.
+        -   Expected Impact if Addressed.
 
-3. Additional considerations:
-   - Cost implications
-   - Implementation difficulty
-   - Expected improvement
-   - Monitoring recommendations
+3.  **Overall Action Plan & Monitoring**:
+    -   Prioritized steps to take.
+    -   Key metrics to monitor for improvement.
+    -   When to consider professional assistance.
 
-Format the response with clear sections and bullet points for better readability.
-Include specific values from the metrics in your analysis.
-Be concise but detailed in your recommendations.""",
+Ensure all recommendations are specific, practical, and directly address the identified metric values. Use clear, concise language.
+""",
 
-                # Second attempt: User-focused recommendations
-                f"""Network Optimization Analysis Request:
+                # Second attempt: User-focused, simplified recommendations
+                f"""Explain the current network issues in simple terms and provide easy-to-follow, actionable recommendations for a typical home user.
 
 Current Network Performance:
 - Packet Loss: {metrics.get('packet_loss', 0)}%
@@ -471,32 +509,18 @@ Current Network Performance:
 - Jitter: {metrics.get('jitter', 0)}ms
 - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
 
-Please provide user-friendly recommendations focusing on:
+Focus on:
+1.  **What's wrong?** (Simple explanation of each problematic metric).
+2.  **Why is it happening?** (Common causes).
+3.  **Quick fixes you can try now.**
+4.  **Things to do for a long-term solution.**
+5.  **Overall advice** for a stable connection.
 
-1. For each issue identified:
-   - Problem description in simple terms
-   - Why it's happening
-   - What users can do right now
-   - What users should do long-term
-   - What to expect after fixes
+Use bullet points for clarity. Keep it straightforward and avoid technical jargon where possible.
+""",
 
-2. Overall network status:
-   - Current health level
-   - Most urgent issues
-   - Quick wins
-   - Long-term improvements
-
-3. User guidance:
-   - Step-by-step instructions
-   - Common mistakes to avoid
-   - When to seek professional help
-   - How to monitor improvements
-
-Use clear, non-technical language where possible.
-Format with bullet points and clear sections.""",
-
-                # Third attempt: Critical issues with troubleshooting
-                f"""Network Troubleshooting Analysis:
+                # Third attempt: Troubleshooting guide
+                f"""Act as a network troubleshooting assistant. Based on these metrics, guide the user through a step-by-step troubleshooting process.
 
 Current Metrics:
 - Packet Loss: {metrics.get('packet_loss', 0)}%
@@ -504,31 +528,19 @@ Current Metrics:
 - Jitter: {metrics.get('jitter', 0)}ms
 - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
 
-Please provide a troubleshooting guide focusing on:
+Provide:
+1.  **Problem Symptoms**: What the user might be experiencing.
+2.  **Troubleshooting Steps**:
+    -   Basic checks (e.g., "Restart your router").
+    -   Intermediate diagnostics (e.g., "Run a speed test").
+    -   Advanced solutions (e.g., "Check router settings for QoS").
+3.  **When to Escalate**: Advice on when to contact their ISP or a technician.
 
-1. Critical Issues:
-   - Problem identification
-   - Severity assessment
-   - Impact analysis
-   - Priority ranking
-
-2. Troubleshooting Steps:
-   - Immediate actions
-   - Verification steps
-   - Common solutions
-   - Advanced fixes
-
-3. Prevention:
-   - Early warning signs
-   - Regular maintenance
-   - Best practices
-   - Monitoring tips
-
-Format with clear sections and bullet points.
-Include specific metrics in the analysis.""",
+Structure as a clear troubleshooting flow.
+""",
 
                 # Fourth attempt: Performance optimization focus
-                f"""Network Performance Optimization Request:
+                f"""As a network performance optimizer, analyze these metrics and suggest ways to improve video call quality specifically.
 
 Current Performance Metrics:
 - Packet Loss: {metrics.get('packet_loss', 0)}%
@@ -536,31 +548,17 @@ Current Performance Metrics:
 - Jitter: {metrics.get('jitter', 0)}ms
 - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
 
-Please provide optimization recommendations focusing on:
+Focus on optimization for video conferencing. Suggest:
+1.  **Immediate Optimization Tips**: Quick changes for better call quality.
+2.  **Configuration Adjustments**: Router or device settings.
+3.  **Network Hardware/Software Recommendations**: If upgrades are necessary.
+4.  **Best Practices**: For consistent video call performance.
 
-1. Performance Analysis:
-   - Current bottlenecks
-   - Resource utilization
-   - Optimization opportunities
-   - Performance targets
+Keep recommendations actionable and relevant to video quality.
+""",
 
-2. Optimization Steps:
-   - Quick improvements
-   - Configuration changes
-   - Hardware considerations
-   - Software solutions
-
-3. Monitoring and Maintenance:
-   - Key metrics to watch
-   - Regular checks
-   - Performance baselines
-   - Improvement tracking
-
-Format with clear sections and bullet points.
-Include specific metrics and targets.""",
-
-                # Fifth attempt: Emergency response
-                f"""Network Emergency Analysis:
+                # Fifth attempt: Emergency response (more concise)
+                f"""You are an emergency network response AI. Based on the following critical network metrics, provide immediate, high-priority actions to stabilize the connection.
 
 Critical Metrics:
 - Packet Loss: {metrics.get('packet_loss', 0)}%
@@ -568,32 +566,13 @@ Critical Metrics:
 - Jitter: {metrics.get('jitter', 0)}ms
 - Bandwidth: {metrics.get('bandwidth', 0)}Mbps
 
-Please provide emergency response recommendations:
-
-1. Immediate Actions:
-   - Critical issues to address
-   - Emergency fixes
-   - Temporary solutions
-   - Impact mitigation
-
-2. Recovery Steps:
-   - System restoration
-   - Performance recovery
-   - Stability measures
-   - Prevention steps
-
-3. Emergency Plan:
-   - Priority actions
-   - Resource allocation
-   - Communication steps
-   - Recovery timeline
-
-Format with clear sections and bullet points.
-Focus on immediate actionable steps."""
+Prioritize actions that will have the quickest and most significant impact on network stability.
+Provide a clear, numbered list of actions, followed by brief explanations.
+"""
             ]
 
             # Try each prompt until we get a good response
-            for prompt in prompts:
+            for i, prompt in enumerate(prompts):
                 try:
                     # Wait to respect rate limits
                     self._wait_for_rate_limit()
@@ -602,8 +581,8 @@ Focus on immediate actionable steps."""
                     response = self.model.generate_content(prompt)
                     recommendations = response.text
                     
-                    # Enhanced quality check
-                    if len(recommendations.strip()) > 100 and self._is_valid_recommendation(recommendations):
+                    # Enhanced quality check: ensure response is substantial and seems valid
+                    if len(recommendations.strip()) > 150 and self._is_valid_recommendation(recommendations): # Increased min length
                         # Increment request counter
                         self.daily_request_count += 1
                         
@@ -617,41 +596,56 @@ Focus on immediate actionable steps."""
                         self._cache_result(cache_key, result)
                         
                         return result
+                    else:
+                        print(f"Gemini response for prompt {i+1} was too short or invalid. Trying next prompt.")
                     
                 except Exception as e:
-                    print(f"Error with prompt attempt: {str(e)}")
+                    print(f"Error with Gemini prompt attempt {i+1}: {str(e)}")
+                    # Continue to next prompt if API call fails
                     continue
             
             # If all prompts fail, fall back to rules
-            print("All Gemini attempts failed, falling back to rules")
+            print("All Gemini attempts failed or returned invalid responses, falling back to rules-based recommendations.")
             return self._get_recommendations_from_rules(metrics)
             
         except Exception as e:
-            print(f"Error getting recommendations: {str(e)}")
+            print(f"An unexpected error occurred in get_recommendations: {str(e)}")
             return self._get_recommendations_from_rules(metrics)
-    
+
     def _is_valid_recommendation(self, text: str) -> bool:
         """Check if the recommendation text is valid and well-structured"""
-        # Check for minimum length
-        if len(text.strip()) < 100:
+        # Check for minimum length (increased to 150 from 100)
+        if len(text.strip()) < 150:
             return False
             
-        # Check for basic structure
-        required_sections = ['•', '-', ':']
-        if not any(section in text for section in required_sections):
+        # Check for basic structure (e.g., presence of bullet points, numbers, or section indicators)
+        required_elements = ['1.', '2.', '3.', '-', '•', ':']
+        if not any(element in text for element in required_elements):
             return False
             
-        # Check for metric references
-        metric_terms = ['packet', 'loss', 'latency', 'jitter', 'bandwidth']
+        # Check for metric references to ensure relevance
+        metric_terms = ['packet loss', 'latency', 'jitter', 'bandwidth', 'network']
         if not any(term in text.lower() for term in metric_terms):
             return False
             
+        # Add a check for repetitive phrases or clearly unhelpful responses (can be refined)
+        if "I cannot provide recommendations" in text or "I need more information" in text:
+            return False
+
         return True
 
     def get_historical_analysis(self, historical_data: List[Dict]) -> Dict:
         """Analyze historical data patterns with caching"""
         try:
             # Calculate averages
+            if not historical_data:
+                return {
+                    'analysis': "No historical data available for analysis.",
+                    'average_metrics': {},
+                    'data_points': 0,
+                    'is_fallback': True
+                }
+
             avg_metrics = {
                 'packet_loss': sum(d.get('packet_loss', 0) for d in historical_data) / len(historical_data),
                 'latency': sum(d.get('latency', 0) for d in historical_data) / len(historical_data),
@@ -660,15 +654,17 @@ Focus on immediate actionable steps."""
             }
             
             # Create cache key
-            cache_key = f"historical_{avg_metrics['packet_loss']}_{avg_metrics['latency']}_{avg_metrics['jitter']}_{avg_metrics['bandwidth']}"
+            cache_key = f"historical_{avg_metrics['packet_loss']:.2f}_{avg_metrics['latency']:.2f}_{avg_metrics['jitter']:.2f}_{avg_metrics['bandwidth']:.2f}"
             
             # Check cache first
             cached_result = self._get_cached_result(cache_key)
             if cached_result:
+                print("Returning cached historical analysis.")
                 return cached_result
             
             # Check if we've hit daily limit
-            if self.daily_request_count >= 60:  # Conservative daily limit
+            if self.daily_request_count >= self.MAX_DAILY_REQUESTS:
+                print("Daily Gemini request limit reached for historical analysis, falling back to rules.")
                 return {
                     'analysis': self._get_fallback_recommendations(avg_metrics)['analysis'],
                     'average_metrics': avg_metrics,
@@ -679,24 +675,8 @@ Focus on immediate actionable steps."""
             # Wait for rate limit
             self._wait_for_rate_limit()
             
-            prompt = f"""
-            Analyze these network metrics and provide concise insights:
-            
-            Average Metrics:
-            - Packet Loss: {avg_metrics['packet_loss']:.2f}%
-            - Latency: {avg_metrics['latency']:.2f}ms
-            - Jitter: {avg_metrics['jitter']:.2f}ms
-            - Bandwidth: {avg_metrics['bandwidth']:.2f}Mbps
-            
-            Data points: {len(historical_data)}
-            
-            Provide:
-            1. Overall assessment
-            2. Key patterns
-            3. Main recommendations
-            
-            Keep the response brief and focused.
-            """
+            # Use the refined _create_prompt for historical analysis
+            prompt = self._create_prompt(avg_metrics)
             
             response = self.model.generate_content(prompt)
             
@@ -716,9 +696,10 @@ Focus on immediate actionable steps."""
             return result
             
         except Exception as e:
-            print(f"Error getting historical analysis: {e}")
+            print(f"Error getting historical analysis from Gemini: {e}")
+            # Fallback to rules-based analysis if API call fails
             return {
-                'analysis': self._get_fallback_recommendations(avg_metrics)['analysis'],
+                'analysis': self._get_fallback_recommendations(avg_metrics if 'avg_metrics' in locals() else {})['analysis'],
                 'average_metrics': avg_metrics if 'avg_metrics' in locals() else {},
                 'data_points': len(historical_data),
                 'is_fallback': True
