@@ -22,12 +22,10 @@ from gemini_recommender import GeminiRecommender
 app = Flask(__name__)
 
 # Create data directory if it doesn't exist
-DATA_DIR = 'data'
+DATA_DIR = 'frontend/data'
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-# WARNING: Storing API keys directly in code is not recommended for production.
-# Use environment variables (e.g., in a .env file) instead for security.
 gemini_api_key = "AIzaSyAbfxnmpbaymKCzjTsiXswGMHEr1Bt72VYKEY"
 gemini_recommender = GeminiRecommender(api_key=gemini_api_key)
 if not gemini_api_key:
