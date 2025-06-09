@@ -88,6 +88,7 @@ Object.keys(chartConfigs).forEach(key => {
     charts[key] = new Chart(ctx, chartConfigs[key]);
 });
 
+
 let historicalCharts = {};
 let qualityScoreChart = null;
 let dataCollectionInterval = null;
