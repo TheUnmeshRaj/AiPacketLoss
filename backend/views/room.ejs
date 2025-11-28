@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <title>Conference Room - Professional Video Calling</title>
+  <title>Conference Room</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/styles/room.css">
@@ -28,16 +28,12 @@
         <span>ConferenceRoom</span>
       </a>
       <div class="room-info">
-        <div class="room-id">Room ID: <span id="room-id-display">Room</span></div>
-        <div class="participants-count">Participants: <span id="participants-count">1</span></div>
+        <!-- <div class="room-id">Room ID: <span id="room-id-display">Room</span></div> -->
+        <!-- <div class="participants-count">Participants: <span id="participants-count">1</span></div> -->
       </div>
     </div>
     <div class="header-right">
       <div class="time-display" id="time-display">00:00</div>
-      <button class="monitor-btn" id="monitor-btn">
-        <i class="fas fa-chart-line"></i>
-        Monitor Metrics
-      </button>
     </div>
   </header>
 
@@ -79,6 +75,9 @@
 
 
   <script>
+      const roomId = "<%= roomId %>";
+
+
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => {
         document.getElementById('loading-overlay').style.display = 'none';
@@ -97,7 +96,6 @@
       updateTime();
       setInterval(updateTime, 1000);
 
-      document.getElementById('room-id-display').textContent = ROOM_ID;
     });
 
 
@@ -169,7 +167,19 @@
       }
     });
 
-    document.getElementById('participants-list').addEventListener('click', function() {});
+    fetch(`/api/participants/${roomId}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Participants:", data.participants);
+    });
+
+
+    document.getElementById('participants-list')
+    .addEventListener('click', function () {
+      fetch(`/api/participants/${roomId}`)
+        .then(res => res.json())
+        .then(data => console.log(data.participants));
+    });
 
     document.getElementById('monitor-btn').addEventListener('click', function() {
   window.open('http://127.0.0.1:5000', '_blank');

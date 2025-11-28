@@ -3,6 +3,12 @@ const videoGrid = document.getElementById('video-grid');
 const myPeer = new Peer();
 const peers = {};
 let myStream;
+const names = ['Tony Stark', 'Bruce Banner', 'Natasha Romanoff', 'Steve Rogers', 'Thor Odinson', 'Clint Barton', 'Wanda Maximoff', 'Vision', 'Sam Wilson', 'Bucky Barnes']
+const participantNames = {}; // map peerId -> display name
+let myName = null; // assigned name for this client
+// requestedName persisted locally so refresh keeps preference; server may reassign to avoid duplicates
+const requestedName = localStorage.getItem('displayName') || null;
+
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   .then(stream => {
@@ -12,18 +18,40 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     myPeer.on('call', call => {
       call.answer(stream);
       call.on('stream', userVideoStream => {
-        addVideoStreamToSlot(userVideoStream, call.peer, `User ${call.peer}`);
+        const display = participantNames[call.peer] || names[Math.floor(Math.abs(hashCode(call.peer)) % names.length)];
+        addVideoStreamToSlot(userVideoStream, call.peer, display);
+        console.log('Receiving stream from', display)
       });
     });
 
-    socket.on('user-connected', userId => {
-      connectToNewUser(userId, myStream);
+    // server sends objects with id and name
+    socket.on('user-connected', ({ userId, name }) => {
+      participantNames[userId] = name || (`User ${userId}`);
+      connectToNewUser(userId, myStream, name);
       updateParticipantCount();
     });
 
-    socket.on('existing-users', userIds => {
-      userIds.forEach(userId => connectToNewUser(userId, stream));
+    socket.on('existing-users', users => {
+      users.forEach(({ id, name }) => {
+        participantNames[id] = name || (`User ${id}`);
+        connectToNewUser(id, stream, name);
+      });
       updateParticipantCount();
+    });
+
+    // server confirms the joining socket's assigned name
+    socket.on('joined', ({ userId, name }) => {
+      participantNames[userId] = name;
+      if (userId === myPeer.id) {
+        myName = name;
+        localStorage.setItem('displayName', name);
+        // update our own video slot label if already created
+        const mySlot = document.querySelector('.video-container[data-user-id="me"]');
+        if (mySlot) {
+          const label = mySlot.querySelector('.participant-name');
+          if (label) label.textContent = `You (${myName})`;
+        }
+      }
     });
   })
   .catch(err => {
@@ -32,16 +60,21 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   });
 
 socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close();
-  removeUserSlot(userId);
-  delete peers[userId];
+  const id = typeof userId === 'object' ? userId.userId : userId;
+  if (peers[id]) peers[id].close();
+  removeUserSlot(id);
+  delete peers[id];
+  delete participantNames[id];
   updateParticipantCount();
 });
 
-socket.on('user-left', userId => {
-  showToast(`User ${userId} has left the chat.`);
-  if (peers[userId]) peers[userId].close();
-  removeUserSlot(userId);
+socket.on('user-left', payload => {
+  const id = payload?.userId || payload;
+  const name = participantNames[id] || id;
+  showToast(`User ${name} has left the chat.`);
+  if (peers[id]) peers[id].close();
+  removeUserSlot(id);
+  delete participantNames[id];
 });
 
 socket.on('room-full', () => {
@@ -49,14 +82,16 @@ socket.on('room-full', () => {
 });
 
 myPeer.on('open', id => {
-  socket.emit('join-room', ROOM_ID, id);
+  // send our requested display name (from localStorage) to server; server will respond with assigned name
+  socket.emit('join-room', ROOM_ID, id, requestedName);
 });
 
 
-function connectToNewUser(userId, stream) {
+function connectToNewUser(userId, stream, name) {
   const call = myPeer.call(userId, stream);
   call.on('stream', userVideoStream => {
-    addVideoStreamToSlot(userVideoStream, userId, `User ${userId}`);
+    const display = participantNames[userId] || name || (`User ${userId}`);
+    addVideoStreamToSlot(userVideoStream, userId, display);
   });
 
   call.on('close', () => {
@@ -65,11 +100,7 @@ function connectToNewUser(userId, stream) {
 
   peers[userId] = call;
 
-  // 🧠 Add dynamic quality monitoring here
-  // const pc = call.peerConnection;
   const pc = myPeer._connections?.[userId]?.[0]?.peerConnection || null;
-
-  // const pc = myPeer._connections ? Object.values(myPeer._connections)[0]?.[0]?.peerConnection : null;
 
   if (pc) {
     setInterval(() => {
@@ -80,8 +111,6 @@ function connectToNewUser(userId, stream) {
             const bitrate = report.bitrateMean || 0;
 
             console.log('Bitrate:', bitrate, 'Packet Loss:', loss);
-            console.log('PC:', pc);
-            console.log('Report:', report);
 
             if (loss > 50 || bitrate < 100000) {
               stream.getVideoTracks()[0].applyConstraints({
@@ -101,13 +130,23 @@ function connectToNewUser(userId, stream) {
   }
 }
 
+// small string hash for fallback deterministic name selection
+function hashCode(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h) + str.charCodeAt(i);
+    h |= 0;
+  }
+  return h;
+}
+
 
 function addVideoStreamToSlot(stream, userId, name = 'User') {
   if (document.querySelector(`.video-container[data-user-id="${userId}"]`)) return;
 
   const existingSlots = document.querySelectorAll('.video-container');
-  if (existingSlots.length >= 6) {
-    console.warn('Max 6 participants reached');
+  if (existingSlots.length >= 10) {
+    console.warn('Max 10 participants reached');
     return;
   }
 
@@ -147,7 +186,6 @@ function addVideoStreamToSlot(stream, userId, name = 'User') {
 
   overlay.appendChild(audioIndicator);
 
-  // Show/hide based on mute status AFTER video and overlay created
   const audioTracks = stream.getAudioTracks();
   if (audioTracks.length === 0 || !audioTracks[0].enabled) {
     audioIndicator.style.display = 'none';
