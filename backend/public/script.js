@@ -8,6 +8,7 @@ const participantNames = {}; // map peerId -> display name
 let myName = null; // assigned name for this client
 // requestedName persisted locally so refresh keeps preference; server may reassign to avoid duplicates
 const requestedName = localStorage.getItem('displayName') || null;
+let usingFacingMode = 'user'; // 'user' (front) or 'environment' (back)
 
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -252,4 +253,116 @@ function toggleVideo() {
     videoTrack.enabled = !videoTrack.enabled;
     return videoTrack.enabled ? 'Turn Off Camera' : 'Turn On Camera';
   }
+}
+
+// Switch mobile camera (front/back). Must be called from a user gesture.
+async function switchCamera() {
+  if (!myStream) return;
+  const desired = usingFacingMode === 'user' ? 'environment' : 'user';
+
+  // Try strict facingMode first
+  try {
+    const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: desired } }, audio: true });
+    applyNewVideoStream(newStream, desired);
+    return;
+  } catch (e) {
+    // ignore and try relaxed
+  }
+
+  try {
+    const newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: desired } }, audio: true });
+    applyNewVideoStream(newStream, desired);
+    return;
+  } catch (e) {
+    // fallback to deviceId enumeration after permission
+  }
+
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(d => d.kind === 'videoinput');
+    if (videoDevices.length === 0) {
+      console.warn('No video input devices found');
+      return;
+    }
+
+    const currentDeviceId = myStream.getVideoTracks()[0]?.getSettings()?.deviceId;
+    let pick = null;
+    for (const d of videoDevices) {
+      const label = (d.label || '').toLowerCase();
+      if (desired === 'environment' && (label.includes('back') || label.includes('rear') || label.includes('environment'))) {
+        pick = d;
+        break;
+      }
+      if (desired === 'user' && (label.includes('front') || label.includes('user'))) {
+        pick = d;
+        break;
+      }
+    }
+    if (!pick) pick = videoDevices.find(d => d.deviceId !== currentDeviceId) || videoDevices[0];
+    if (pick) {
+      const newStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: pick.deviceId } }, audio: true });
+      applyNewVideoStream(newStream, desired);
+      return;
+    }
+  } catch (err) {
+    console.error('Switch camera failed:', err);
+  }
+
+  console.warn('Switch camera: could not switch camera on this device');
+}
+
+function applyNewVideoStream(newStream, usedFacing) {
+  const newVideoTrack = newStream.getVideoTracks()[0];
+  if (!newVideoTrack) {
+    console.warn('No video track in new stream');
+    return;
+  }
+
+  const oldVideoTrack = myStream.getVideoTracks()[0];
+
+  // Keep existing audio tracks if present; otherwise use newStream's audio
+  const audioTracks = myStream.getAudioTracks();
+  let updatedStream;
+  if (audioTracks.length > 0) {
+    updatedStream = new MediaStream([...audioTracks, newVideoTrack]);
+  } else {
+    updatedStream = newStream;
+  }
+
+  // Stop old video track
+  if (oldVideoTrack && oldVideoTrack.stop) oldVideoTrack.stop();
+
+  myStream = updatedStream;
+
+  // Update local video element
+  const myVideoEl = document.querySelector('.video-container[data-user-id="me"] video');
+  if (myVideoEl) {
+    myVideoEl.srcObject = myStream;
+    myVideoEl.muted = true;
+    myVideoEl.play().catch(() => {});
+  }
+
+  usingFacingMode = usedFacing;
+
+  // Replace outgoing video track on existing peer connections
+  Object.values(peers).forEach(call => {
+    const pc = call.peerConnection || (myPeer._connections?.[call.peer]?.[0]?.peerConnection);
+    if (pc && pc.getSenders) {
+      const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+      if (sender) {
+        sender.replaceTrack(newVideoTrack).catch(err => console.warn('replaceTrack failed', err));
+      } else {
+        try { pc.addTrack(newVideoTrack, myStream); } catch (e) { /* ignore */ }
+      }
+    }
+  });
+}
+
+// wire UI button (button exists in `room.ejs`)
+try {
+  document.getElementById('switch-camera')?.addEventListener('click', function () {
+    switchCamera();
+  });
+} catch (e) {
+  // if DOM not ready yet, it's fine because script is loaded deferred
 }
