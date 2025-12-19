@@ -258,6 +258,14 @@ body::before {
     flex: 1 1 100% !important;
   }
 
+  /* Exactly 2 participants: side-by-side on desktop */
+  #video-grid > .video-container:nth-child(1):nth-last-child(2),
+  #video-grid > .video-container:nth-child(2):nth-last-child(1) {
+    flex: 1 1 calc(50% - 20px) !important;
+    max-width: calc(50% - 20px) !important;
+    min-height: calc(100vh - 200px) !important; /* fill available vertical space */
+  }
+
   #video-grid > .video-container:nth-child(1):nth-last-child(4),
   #video-grid > .video-container:nth-child(2):nth-last-child(3),
   #video-grid > .video-container:nth-child(3):nth-last-child(2),
