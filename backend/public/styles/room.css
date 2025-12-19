@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
-
-
 * {
   margin: 0;
   padding: 0;
@@ -93,8 +91,8 @@ body::before {
   min-width: 80px;
 }
 
-.monitor-btn,
-.more-options {
+/* Header button (rectangular) */
+.monitor-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 8px 16px;
@@ -108,10 +106,38 @@ body::before {
   transition: all 0.3s ease;
 }
 
-.monitor-btn:hover,
-.more-options:hover {
+.monitor-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
+}
+
+/* Small circular options button (used in bottom controls) */
+.more-options {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.more-options:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.more-options:focus-visible,
+.monitor-btn:focus-visible,
+.control-btn:focus-visible {
+  outline: 3px solid rgba(0,198,255,0.2);
+  outline-offset: 3px;
 }
 
 .main-container {
@@ -207,7 +233,7 @@ body::before {
     flex: 1 1 calc(50% - 12px) !important;
   }
   #video-grid > .video-container:nth-child(3):nth-last-child(1) {
-    flex: 1 1 100% !important;
+    flex: 1 1 100% !important; 
   }
 
   /* Exactly 4: two columns x two rows (fill screen better) */
