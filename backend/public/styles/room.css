@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
 
 
 
@@ -133,6 +134,7 @@ body::before {
   overflow-y: auto;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
+  align-items: stretch; /* ensure items fill row height to reduce gaps */
 }
 
 #video-grid::-webkit-scrollbar {
@@ -149,6 +151,108 @@ body::before {
 }
 #video-grid:empty {
   display: block;
+}
+
+/* Compatibility overrides (1–4 participants) — use nth-child/:nth-last-child to detect exact counts
+   These rules override inline flex set by JS using !important to ensure layout matches UX requirements
+   1 participant -> full width (large centered)
+   2 participants -> stacked (one up, one down)
+   3 participants -> 2 up, 1 down
+   4 participants -> 2 x 2 grid
+*/
+
+/* Single participant: large centered */
+#video-grid > .video-container:nth-child(1):nth-last-child(1) {
+  flex: 1 1 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Exactly 2 participants: stack vertically */
+#video-grid > .video-container:nth-child(1):nth-last-child(2),
+#video-grid > .video-container:nth-child(2):nth-last-child(1) {
+  flex: 1 1 100% !important;
+  max-width: 100% !important;
+}
+
+/* Exactly 3 participants: first two side-by-side, third full-width */
+#video-grid > .video-container:nth-child(1):nth-last-child(3),
+#video-grid > .video-container:nth-child(2):nth-last-child(2) {
+  flex: 1 1 calc(50% - 20px) !important;
+}
+#video-grid > .video-container:nth-child(3):nth-last-child(1) {
+  flex: 1 1 100% !important;
+}
+
+/* Exactly 4 participants: two columns, two rows */
+#video-grid > .video-container:nth-child(1):nth-last-child(4),
+#video-grid > .video-container:nth-child(2):nth-last-child(3),
+#video-grid > .video-container:nth-child(3):nth-last-child(2),
+#video-grid > .video-container:nth-child(4):nth-last-child(1) {
+  flex: 1 1 calc(50% - 20px) !important;
+}
+
+/* Mobile and desktop responsive tweaks for exact counts */
+@media (max-width: 768px) {
+  /* On small screens, make containers fill rows and remove extra top offset */
+  .video-container { top: 0 !important; max-height: none !important; }
+
+  /* Use fixed aspect ratio on mobile so items size predictably and don't overlap */
+  .video-container { aspect-ratio: 16/9 !important; }
+
+  /* Exactly 2: stacked (already working) keep same */
+  /* Exactly 3: two on top (50/50) and third full-width to fill space */
+  #video-grid > .video-container:nth-child(1):nth-last-child(3),
+  #video-grid > .video-container:nth-child(2):nth-last-child(2) {
+    flex: 1 1 calc(50% - 12px) !important;
+  }
+  #video-grid > .video-container:nth-child(3):nth-last-child(1) {
+    flex: 1 1 100% !important;
+  }
+
+  /* Exactly 4: two columns x two rows (fill screen better) */
+  #video-grid > .video-container:nth-child(1):nth-last-child(4),
+  #video-grid > .video-container:nth-child(2):nth-last-child(3),
+  #video-grid > .video-container:nth-child(3):nth-last-child(2),
+  #video-grid > .video-container:nth-child(4):nth-last-child(1) {
+    flex: 1 1 calc(50% - 12px) !important;
+  }
+
+  /* Ensure video fits the container while maintaining aspect ratio */
+  .video-container video { width: 100%; height: auto !important; }
+}
+
+@media (min-width: 769px) {
+  /* Desktop tweaks: ensure 3 -> 2 up, 1 down; 4 -> 2x2 dense grid */
+  #video-grid > .video-container:nth-child(1):nth-last-child(3),
+  #video-grid > .video-container:nth-child(2):nth-last-child(2) {
+    flex: 1 1 calc(50% - 20px) !important;
+  }
+  #video-grid > .video-container:nth-child(3):nth-last-child(1) {
+    flex: 1 1 100% !important;
+  }
+
+  #video-grid > .video-container:nth-child(1):nth-last-child(4),
+  #video-grid > .video-container:nth-child(2):nth-last-child(3),
+  #video-grid > .video-container:nth-child(3):nth-last-child(2),
+  #video-grid > .video-container:nth-child(4):nth-last-child(1) {
+    flex: 1 1 calc(50% - 20px) !important;
+  }
+
+  /* Ensure rows fill vertically for 3 & 4 participants so bottom gap is removed */
+  #video-grid > .video-container:nth-child(1):nth-last-child(3),
+  #video-grid > .video-container:nth-child(2):nth-last-child(2),
+  #video-grid > .video-container:nth-child(3):nth-last-child(1),
+  #video-grid > .video-container:nth-child(1):nth-last-child(4),
+  #video-grid > .video-container:nth-child(2):nth-last-child(3),
+  #video-grid > .video-container:nth-child(3):nth-last-child(2),
+  #video-grid > .video-container:nth-child(4):nth-last-child(1) {
+    min-height: calc((100vh - 200px) / 2) !important;
+  }
+
+  /* Let items expand vertically to fill rows and reduce gaps */
+  .video-container { max-height: none; height: 100%; }
+  #video-grid { align-content: stretch; }
 }
 
   .video-container {
@@ -168,6 +272,11 @@ body::before {
   height: 100%;
   border-radius: 16px;
   object-fit: cover;
+}
+
+/* Slightly taller aspect for small screens */
+@media (max-width: 768px) {
+  .video-container { aspect-ratio: 4/3; }
 }
 
 
