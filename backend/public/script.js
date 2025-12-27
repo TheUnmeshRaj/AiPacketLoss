@@ -8,7 +8,8 @@ const participantNames = {}; // map peerId -> display name
 let myName = null; // assigned name for this client
 // requestedName persisted locally so refresh keeps preference; server may reassign to avoid duplicates
 const requestedName = localStorage.getItem('displayName') || null;
-let usingFacingMode = 'user'; // 'user' (front) or 'environment' (back)
+let usingFacingMode = 'user'; 
+// 'user' (front) or 'environment' (back)
 
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -25,7 +26,6 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       });
     });
 
-    // server sends objects with id and name
     socket.on('user-connected', ({ userId, name }) => {
       participantNames[userId] = name || (`User ${userId}`);
       connectToNewUser(userId, myStream, name);
@@ -40,7 +40,6 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       updateParticipantCount();
     });
 
-    // server confirms the joining socket's assigned name
     socket.on('joined', ({ userId, name }) => {
       participantNames[userId] = name;
       if (userId === myPeer.id) {
@@ -60,21 +59,15 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     alert('Could not access camera or microphone.');
   });
 
-socket.on('user-disconnected', userId => {
-  const id = typeof userId === 'object' ? userId.userId : userId;
-  if (peers[id]) peers[id].close();
-  removeUserSlot(id);
-  delete peers[id];
-  delete participantNames[id];
-  updateParticipantCount();
-});
-
 socket.on('user-left', payload => {
   const id = payload?.userId || payload;
-  const name = participantNames[id] || id;
-  showToast(`User ${name} has left the chat.`);
   if (peers[id]) peers[id].close();
+  console.log('Tried disconnecting User:', id);
   removeUserSlot(id);
+  console.log('User disconnected:', id);
+  console.log('Peers before deletion:', Object.keys(peers));
+  delete peers[id];
+  console.log('Peers after deletion:', Object.keys(peers));
   delete participantNames[id];
 });
 
@@ -144,12 +137,6 @@ function hashCode(str) {
 
 function addVideoStreamToSlot(stream, userId, name = 'User') {
   if (document.querySelector(`.video-container[data-user-id="${userId}"]`)) return;
-
-  const existingSlots = document.querySelectorAll('.video-container');
-  if (existingSlots.length >= 10) {
-    console.warn('Max 10 participants reached');
-    return;
-  }
 
   const slot = document.createElement('div');
   slot.className = 'video-container';

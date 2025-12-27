@@ -82,7 +82,6 @@ io.on('connection', socket => {
 
   console.log(`User ${userId} (requested: ${requestedName}) assigned name '${assignedName}' in room ${roomId}`);
 
-  // Notify others in the room about the new user (id + name)
   socket.to(roomId).emit('user-connected', { userId, name: assignedName });
 
   // Send existing users (id + name) to this socket, excluding the joining user
@@ -100,7 +99,6 @@ io.on('connection', socket => {
     roomParticipants[roomId]?.delete(userId);
     socket.to(roomId).emit('user-left', { userId, name: null });
   });
-  // cleanup mapping for this socket (if any)
   delete socketToPeer[socket.id];
 });
 
