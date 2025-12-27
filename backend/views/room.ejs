@@ -29,7 +29,7 @@
       </a>
       <div class="room-info">
         <!-- <div class="room-id">Room ID: <span id="room-id-display">Room</span></div> -->
-        <!-- <div class="participants-count">Participants: <span id="participants-count">1</span></div> -->
+        <div class="participants-count">Participants: <span id="participants-count">1</span></div>
       </div>
     </div>
     <div class="header-right">
@@ -78,13 +78,10 @@
 
 
   <script>
-      const roomId = "<%= roomId %>";
+    const roomId = "<%= roomId %>";
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(() => {
-        document.getElementById('loading-overlay').style.display = 'none';
-      }, 1500);
+    document.addEventListener('DOMContentLoaded', function () {
 
       function updateTime() {
         const now = new Date();
@@ -95,18 +92,15 @@
         });
         document.getElementById('time-display').textContent = timeString;
       }
-
       updateTime();
       setInterval(updateTime, 1000);
 
     });
 
-
-    document.getElementById('toggle-audio').addEventListener('click', function() {
+    document.getElementById('toggle-audio').addEventListener('click', function () {
       const button = this;
       const icon = button.querySelector('i');
       const isMuted = button.classList.contains('muted');
-
       if (isMuted) {
         button.classList.remove('muted');
         icon.className = 'fas fa-microphone-slash';
@@ -114,11 +108,10 @@
         button.classList.add('muted');
         icon.className = 'fas fa-microphone';
       }
-
       toggleAudio();
     });
 
-    document.getElementById('toggle-video').addEventListener('click', function() {
+    document.getElementById('toggle-video').addEventListener('click', function () {
       const button = this;
       const icon = button.querySelector('i');
       const isMuted = button.classList.contains('muted');
@@ -134,7 +127,7 @@
       toggleVideo();
     });
 
-    document.getElementById('screen-share').addEventListener('click', function() {
+    document.getElementById('screen-share').addEventListener('click', function () {
       const button = this;
       const icon = button.querySelector('i');
 
@@ -147,7 +140,7 @@
       }
     });
 
-    document.getElementById('end-call').addEventListener('click', function() {
+    document.getElementById('end-call').addEventListener('click', function () {
 
       socket.emit('left-call', myPeer.id);
       if (myPeer) myPeer.destroy();
@@ -160,7 +153,7 @@
       }, 1000);
     });
 
-    document.getElementById('chat-toggle').addEventListener('click', function() {
+    document.getElementById('chat-toggle').addEventListener('click', function () {
       const button = this;
 
       if (button.classList.contains('active')) {
@@ -171,26 +164,26 @@
     });
 
     fetch(`/api/participants/${roomId}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Participants:", data.participants);
-    });
+      .then(res => res.json())
+      .then(data => {
+        console.log("Participants:", data.participants);
+      });
 
 
     document.getElementById('participants-list')
-    .addEventListener('click', function () {
-      fetch(`/api/participants/${roomId}`)
-        .then(res => res.json())
-        .then(data => console.log(data.participants));
-    });
+      .addEventListener('click', function () {
+        fetch(`/api/participants/${roomId}`)
+          .then(res => res.json())
+          .then(data => console.log(data.participants));
+      });
 
 
-document.getElementById('more-options').addEventListener('click', function() {});
+    document.getElementById('more-options').addEventListener('click', function () { });
 
     navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      })
+      video: true,
+      audio: true
+    })
       .then(stream => {
         const videoElements = document.querySelectorAll('video');
         if (videoElements[0]) {
